@@ -1,0 +1,27 @@
+{
+  "name": "extension-manager",
+  "version": "1.0.1",
+  "description": "",
+  "main": "release/index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack -w --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uhlryk/extension-manager.git"
+  },
+  "author": "Krzysztof Sztompka <sztompka.krzysztof@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uhlryk/extension-manager/issues"
+  },
+  "homepage": "https://github.com/uhlryk/extension-manager#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "webpack": "^2.3.1"
+  }
+}
