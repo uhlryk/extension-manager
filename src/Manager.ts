@@ -20,7 +20,12 @@ export default class Manager {
     let callbackResponses: any[] = [];
     let event: Event = this._events.find(event => event.getName() === eventName);
     if (event) {
-      callbackResponses.push(event.getCallbacks().forEach(callback => callback(props)));
+      event.getCallbacks().forEach(callback => {
+        let callbackResponse = callback(props);
+        if (callbackResponse) {
+          callbackResponses.push(callbackResponse);
+        }
+      })
     }
     return callbackResponses;
   }
