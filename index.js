@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else {
-		var a = factory();
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -73,16 +64,67 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+class Extension {
+    constructor(name) {
+        this._manager = null;
+        this._name = name;
+    }
+    init(manager) {
+        this._manager = manager;
+        return this;
+    }
+    getManager() {
+        return this._manager;
+    }
+    getName() {
+        return this._name;
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Extension;
 
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Manager {
+    constructor() {
+        this._extensions = [];
+    }
+    registerExtension(newExtension) {
+        if (this._extensions.some(extension => extension.getName() === newExtension.getName()) === false) {
+            this._extensions.push(newExtension);
+            newExtension.init(this);
+        }
+        return this;
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Manager;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Manager__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Extension__ = __webpack_require__(0);
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    Manager: __WEBPACK_IMPORTED_MODULE_0__Manager__["a" /* default */],
+    Extension: __WEBPACK_IMPORTED_MODULE_1__Extension__["a" /* default */]
+});
 
 /***/ })
 /******/ ]);
-});

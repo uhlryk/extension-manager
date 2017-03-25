@@ -1,17 +1,20 @@
-var webpack = require('webpack');
+
 module.exports = {
-    entry: './src/index.js',
-    output: {
-        libraryTarget: 'umd',
-        filename: './release/index.js'
-    },
-    module: {
-        loaders: [
-            {
-                test: /.js/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
-            }
-        ]
-    }
+  entry: './src/index.ts',
+  output: {
+    filename: 'index.js',
+    libraryTarget: "commonjs2"
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.ts$/,
+        loader: 'babel-loader!ts-loader',
+        exclude: /node_modules/,
+      },
+    ]
+  },
+  resolve: {
+    extensions: [".ts", ".js"]
+  },
 };
