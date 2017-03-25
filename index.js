@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -96,9 +96,12 @@ class Extension {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Event__ = __webpack_require__(2);
+
 class Manager {
     constructor() {
         this._extensions = [];
+        this._events = [];
     }
     registerExtension(newExtension) {
         if (this._extensions.some(extension => extension.getName() === newExtension.getName()) === false) {
@@ -107,12 +110,53 @@ class Manager {
         }
         return this;
     }
+    callEvent(eventName, props) {
+        let callbackResponses = [];
+        let event = this._events.find(event => event.getName() === eventName);
+        if (event) {
+            callbackResponses.push(event.getCallbacks().forEach(callback => callback(props)));
+        }
+        return callbackResponses;
+    }
+    registerEventListener(eventName, callback) {
+        let event = this._events.find(event => event.getName() === eventName);
+        if (!event) {
+            event = new __WEBPACK_IMPORTED_MODULE_0__Event__["a" /* default */](eventName);
+            this._events.push(event);
+        }
+        event.addCallback(callback);
+        return this;
+    }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Manager;
 
 
 /***/ }),
 /* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Event {
+    constructor(name) {
+        this._name = name;
+        this._callbacks = [];
+    }
+    getName() {
+        return this._name;
+    }
+    addCallback(callback) {
+        this._callbacks.push(callback);
+        return this;
+    }
+    getCallbacks() {
+        return this._callbacks;
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Event;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
