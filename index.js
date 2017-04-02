@@ -110,11 +110,14 @@ class Manager {
         }
         return this;
     }
-    callEvent(eventName, props) {
+    getExtensions() {
+        return this._extensions;
+    }
+    callEvent(eventName, initialValue) {
         let callbackResponses = [];
         let event = this._events.find(event => event.getName() === eventName);
         if (event) {
-            callbackResponses.push(event.getCallbacks().forEach(callback => callback(props)));
+            event.getCallbacks().reduce((response, callback) => callback(response, initialValue));
         }
         return callbackResponses;
     }

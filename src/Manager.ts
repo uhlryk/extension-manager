@@ -16,6 +16,10 @@ export default class Manager {
     return this;
   }
 
+  getExtensions(): Extension[] {
+    return this._extensions;
+  }
+
   callEvent(eventName: String, initialValue: any): any[] {
     let callbackResponses: any[] = [];
     let event: Event = this._events.find(event => event.getName() === eventName);
