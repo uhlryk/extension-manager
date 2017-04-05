@@ -1,8 +1,7 @@
-import Manager from "./Manager";
 export default class Extension {
-  constructor (name) {
+  constructor () {
     this._manager = null;
-    this._name = name;
+    this._name = null;
   }
 
   init (manager) {
@@ -12,6 +11,10 @@ export default class Extension {
 
   getManager () {
     return this._manager;
+  }
+
+  setName (name) {
+    this._name = name;
   }
 
   getName () {

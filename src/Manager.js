@@ -1,4 +1,3 @@
-import Extension from "./Extension";
 import Event from "./Event";
 export default class Manager {
   constructor () {
