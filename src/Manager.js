@@ -17,13 +17,11 @@ export default class Manager {
     return this._extensions;
   }
 
-  callEvent(eventName, initialValue) {
-    let callbackResponses = [];
+  callEvent(eventName, value) {
     let event = this._events.find(event => event.getName() === eventName);
     if (event) {
-      event.getCallbacks().reduce((response, callback) => callback(response, initialValue));
+      event.getCallbacks().forEach(callback => callback(value));
     }
-    return callbackResponses;
   }
 
   registerEventListener(eventName, callback) {
