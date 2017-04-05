@@ -1,20 +1,20 @@
-
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/index.js',
   output: {
-    filename: 'index.js',
-    libraryTarget: "commonjs2"
+    libraryTarget: 'umd',
+    filename: 'index.js'
   },
   module: {
     loaders: [
       {
-        test: /\.ts$/,
-        loader: 'babel-loader!ts-loader',
+        test: /.js$/,
+        loader: 'babel-loader',
         exclude: /node_modules/,
-      },
+        query: {
+          presets: ['es2015', 'stage-0'],
+          compact: true
+        }
+      }
     ]
-  },
-  resolve: {
-    extensions: [".ts", ".js"]
-  },
+  }
 };

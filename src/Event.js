@@ -1,21 +1,19 @@
 export default class Event {
-  private _name: String;
-  private _callbacks: Function[];
-  constructor (name: String) {
+  constructor (name) {
     this._name = name;
     this._callbacks = [];
   }
 
-  getName (): String {
+  getName () {
     return this._name;
   }
 
-  addCallback (callback: Function): Event {
+  addCallback (callback) {
     this._callbacks.push(callback);
     return this;
   }
 
-  getCallbacks(): Function[] {
+  getCallbacks() {
     return this._callbacks;
   }
 }

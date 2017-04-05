@@ -1,22 +1,20 @@
 import Manager from "./Manager";
 export default class Extension {
-  private _manager: Manager;
-  private _name: String;
-  constructor (name: String) {
+  constructor (name) {
     this._manager = null;
     this._name = name;
   }
 
-  init (manager: Manager): Extension {
+  init (manager) {
     this._manager = manager;
     return this;
   }
 
-  getManager (): Manager {
+  getManager () {
     return this._manager;
   }
 
-  getName (): String {
+  getName () {
     return this._name;
   }
 }
