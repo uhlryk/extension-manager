@@ -1,4 +1,5 @@
 import Event from "./Event";
+import EventData from "./EventData";
 export default class Manager {
   constructor () {
     this._extensions = [];
@@ -19,9 +20,11 @@ export default class Manager {
 
   callEvent(eventName, value) {
     let event = this._events.find(event => event.getName() === eventName);
+    const eventData = new EventData(value);
     if (event) {
-      event.getCallbacks().forEach(callback => callback(value));
+      event.getCallbacks().forEach(callback => callback(eventData));
     }
+    return eventData.getResponse();
   }
 
   registerEventListener(eventName, callback) {
