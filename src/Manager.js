@@ -24,7 +24,7 @@ export default class Manager {
     if (event) {
       event.getCallbacks().forEach(callback => callback(eventData));
     }
-    return eventData.getResponse();
+    return eventData;
   }
 
   registerEventListener(eventName, callback) {
