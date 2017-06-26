@@ -42,6 +42,14 @@ describe("Manager", ()=>{
         expect(manager.getExtensions().length).to.be.equal(1);
         expect(manager.getExtensions()[0]).to.be.equal(extensionStub);
       });
+
+      it("should return extension by name", () => {
+        expect(manager.getExtensionByName("SOME_NAME")).to.be.equal(extensionStub);
+      })
+
+      it("should return null if extension with name doesn't exist", () => {
+        expect(manager.getExtensionByName("NON_EXISTING_NAME")).to.be.equal(undefined);
+      })
     });
 
     it("should register event listener", () => {

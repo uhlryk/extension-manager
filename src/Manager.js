@@ -18,6 +18,10 @@ export default class Manager {
     return this._extensions;
   }
 
+  getExtensionByName (extensionName) {
+    return this._extensions.find(extension => extension.getName() === extensionName);
+  }
+
   callEvent(eventName, value) {
     let event = this._events.find(event => event.getName() === eventName);
     const eventData = new EventData(value);
