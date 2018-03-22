@@ -1,6 +1,6 @@
 {
   "name": "extensioner",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -18,8 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/uhlryk/extensioner.git"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "Krzysztof Sztompka <sztompka.krzysztof@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -70,4 +69,3 @@
     ]
   }
 }
-
