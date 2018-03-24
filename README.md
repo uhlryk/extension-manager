@@ -47,11 +47,14 @@ Creates new manager
 ### new Extension(): extension
 Each module should have one root class with all settings and this class should extend Extension
 
-### manager.registerExtension(extensionInstanceName:String, extension: Extension): manager
+### manager.registerExtension(extensionInstanceName: String, extension: Extension): manager
 Allow to register/add any new extension and return same manager instance
 
 ### manager.getExtensions(): Array<extension>
 Return all extensions previously registered
+
+### manager.getExtensionsWithProperty(propertyName: String): Array<extensions>
+Returns array of extensions if they have specific property
 
 ### manager.getExtensionByName(extensionInstanceName: String): extension
 Return extension by its name
