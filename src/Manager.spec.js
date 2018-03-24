@@ -45,6 +45,32 @@ describe("Manager", () => {
             });
         });
 
+        describe("when registered extensions with different properties", () => {
+            let extensionA;
+            let extensionB;
+            let extensionC;
+            beforeEach(() => {
+                extensionA = new Extension();
+                extensionA.setProperty("PROPERTY_1", "VALUE_1");
+                extensionB = new Extension();
+                extensionB.setProperty("PROPERTY_1", "VALUE_2");
+                extensionB.setProperty("PROPERTY_2", "VALUE_3");
+                extensionC = new Extension();
+                extensionC.setProperty("PROPERTY_2", "VALUE_4");
+                manager.registerExtension("SOME_NAME_A", extensionA);
+                manager.registerExtension("SOME_NAME_B", extensionB);
+                manager.registerExtension("SOME_NAME_C", extensionC);
+            });
+
+            it("Should return extensions with specific property", () => {
+                const extensions = manager.getExtensionsWithProperty("PROPERTY_1");
+                expect(extensions.length).to.be.equal(2);
+                expect(extensions).to.include(extensionA);
+                expect(extensions).to.include(extensionB);
+                expect(extensions).to.not.include(extensionC);
+            });
+        });
+
         describe("when registered extension has events listeners", () => {
             let extension;
             let eventHandler;

@@ -12,6 +12,10 @@ export default class Manager {
         return Object.values(this._extensions);
     }
 
+    getExtensionsWithProperty(propertyName) {
+        return Object.values(this._extensions).filter(extension => extension.hasProperty(propertyName));
+    }
+
     getExtensionByName(extensionName) {
         return this._extensions[extensionName];
     }

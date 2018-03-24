@@ -147,6 +147,13 @@ var Manager = function () {
             return Object.values(this._extensions);
         }
     }, {
+        key: "getExtensionsWithProperty",
+        value: function getExtensionsWithProperty(propertyName) {
+            return Object.values(this._extensions).filter(function (extension) {
+                return extension.hasProperty(propertyName);
+            });
+        }
+    }, {
         key: "getExtensionByName",
         value: function getExtensionByName(extensionName) {
             return this._extensions[extensionName];
