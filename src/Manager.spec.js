@@ -1,4 +1,5 @@
 import Manager from "./Manager";
+import Extension from "./Extension";
 
 describe("Manager", () => {
     it("should create manager instance", () => {
@@ -7,7 +8,7 @@ describe("Manager", () => {
     });
 
     describe("when manager instance exist", () => {
-        var manager;
+        let manager;
 
         beforeEach(() => {
             manager = new Manager();
@@ -17,28 +18,26 @@ describe("Manager", () => {
             expect(manager.getExtensions().length).to.be.equal(0);
         });
 
-        it("should register and init extension", () => {
-            const extensionStub = createExtensionStub("SOME_NAME");
-            manager.registerExtension(extensionStub);
-            expect(extensionStub.getName.called).be.false();
-            expect(extensionStub.init.called).be.true();
-            expect(manager._extensions[0]).be.equal(extensionStub);
+        it("should add extension", () => {
+            const extension = new Extension();
+            manager.registerExtension("SOME_NAME", extension);
+            expect(manager._extensions["SOME_NAME"]).be.equal(extension);
         });
 
         describe("when registered extension", () => {
-            var extensionStub;
+            let extension;
             beforeEach(() => {
-                extensionStub = createExtensionStub("SOME_NAME");
-                manager.registerExtension(extensionStub);
+                extension = new Extension();
+                manager.registerExtension("SOME_NAME", extension);
             });
 
             it("should return extension list", () => {
                 expect(manager.getExtensions().length).to.be.equal(1);
-                expect(manager.getExtensions()[0]).to.be.equal(extensionStub);
+                expect(manager.getExtensions()[0]).to.be.equal(extension);
             });
 
             it("should return extension by name", () => {
-                expect(manager.getExtensionByName("SOME_NAME")).to.be.equal(extensionStub);
+                expect(manager.getExtensionByName("SOME_NAME")).to.be.equal(extension);
             });
 
             it("should return null if extension with name doesn't exist", () => {
@@ -46,30 +45,22 @@ describe("Manager", () => {
             });
         });
 
-        it("should register event listener", () => {
-            const callbackStub = sinon.stub();
-            manager.registerEventListener("SOME_NAME", callbackStub);
-            expect(manager._events[0]._callbacks[0]).be.equal(callbackStub);
-        });
-
-        describe("when registered event listener", () => {
-            var callbackStub;
+        describe("when registered extension has events listeners", () => {
+            let extension;
+            let eventHandler;
             beforeEach(() => {
-                callbackStub = sinon.stub();
-                manager.registerEventListener("SOME_NAME", callbackStub);
+                extension = new Extension();
+                eventHandler = sinon.stub().callsFake(value => value);
+                extension.setEventListener("SOME_EVENT", eventHandler);
+                manager.registerExtension("SOME_NAME", extension);
             });
 
-            it("should call callback on event call", () => {
-                manager.callEvent("SOME_NAME", "SOME_VALUE");
-                expect(callbackStub.called).be.true();
+            it("should call event handler on event call", () => {
+                const response = manager.callEvent("SOME_EVENT", "SOME_VALUE");
+                expect(eventHandler.calledOnce).be.true();
+                expect(response.length).to.be.equal(1);
+                expect(response[0]).to.be.equal("SOME_VALUE");
             });
         });
     });
 });
-
-function createExtensionStub(extensionName, init = sinon.stub()) {
-    return {
-        init,
-        getName: sinon.stub().returns(extensionName)
-    };
-}

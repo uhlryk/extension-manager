@@ -1,43 +1,24 @@
-import Event from "./Event";
-import EventData from "./EventData";
 export default class Manager {
-  constructor () {
-    this._extensions = [];
-    this._events = [];
-  }
-
-  registerExtension(newExtension) {
-    if (this._extensions.some(extension => extension.getName() === newExtension.getName()) === false) {
-      this._extensions.push(newExtension);
-      newExtension.init(this);
+    constructor() {
+        this._extensions = {};
     }
-    return this;
-  }
 
-  getExtensions() {
-    return this._extensions;
-  }
-
-  getExtensionByName (extensionName) {
-    return this._extensions.find(extension => extension.getName() === extensionName);
-  }
-
-  callEvent(eventName, value) {
-    let event = this._events.find(event => event.getName() === eventName);
-    const eventData = new EventData(value);
-    if (event) {
-      event.getCallbacks().forEach(callback => callback(eventData));
+    registerExtension(extensionName, extension) {
+        this._extensions[extensionName] = extension;
+        return this;
     }
-    return eventData;
-  }
 
-  registerEventListener(eventName, callback) {
-    let event = this._events.find(event => event.getName() === eventName);
-    if (!event) {
-      event = new Event(eventName);
-      this._events.push(event);
+    getExtensions() {
+        return Object.values(this._extensions);
     }
-    event.addCallback(callback);
-    return this;
-  }
+
+    getExtensionByName(extensionName) {
+        return this._extensions[extensionName];
+    }
+
+    callEvent(eventName, value) {
+        return this.getExtensions()
+            .filter(extension => extension.hasEventListener(eventName))
+            .map(extension => extension.getEventListener(eventName)(value));
+    }
 }

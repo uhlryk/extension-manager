@@ -1,23 +1,32 @@
 export default class Extension {
-  constructor () {
-    this._manager = null;
-    this._name = null;
-  }
+    constructor() {
+        this._properties = {};
+        this._events = {};
+    }
 
-  init (manager) {
-    this._manager = manager;
-    return this;
-  }
+    setProperty(propertyName, value) {
+        this._properties[propertyName] = value;
+        return this;
+    }
 
-  getManager () {
-    return this._manager;
-  }
+    hasProperty(propertyName) {
+        return this._properties.hasOwnProperty(propertyName);
+    }
 
-  setName (name) {
-    this._name = name;
-  }
+    getProperty(propertyName) {
+        return this._properties[propertyName];
+    }
 
-  getName () {
-    return this._name;
-  }
+    setEventListener(eventName, handler) {
+        this._events[eventName] = handler;
+        return this;
+    }
+
+    hasEventListener(eventName) {
+        return this._events.hasOwnProperty(eventName);
+    }
+
+    getEventListener(eventName) {
+        return this._events[eventName];
+    }
 }

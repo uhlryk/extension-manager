@@ -102,7 +102,7 @@ var _Manager = __webpack_require__(3);
 
 var _Manager2 = _interopRequireDefault(_Manager);
 
-var _Extension = __webpack_require__(6);
+var _Extension = __webpack_require__(4);
 
 var _Extension2 = _interopRequireDefault(_Extension);
 
@@ -121,84 +121,48 @@ exports.default = {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Event = __webpack_require__(4);
-
-var _Event2 = _interopRequireDefault(_Event);
-
-var _EventData = __webpack_require__(5);
-
-var _EventData2 = _interopRequireDefault(_EventData);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Manager = function () {
-  function Manager() {
-    _classCallCheck(this, Manager);
+    function Manager() {
+        _classCallCheck(this, Manager);
 
-    this._extensions = [];
-    this._events = [];
-  }
+        this._extensions = {};
+    }
 
-  _createClass(Manager, [{
-    key: "registerExtension",
-    value: function registerExtension(newExtension) {
-      if (this._extensions.some(function (extension) {
-        return extension.getName() === newExtension.getName();
-      }) === false) {
-        this._extensions.push(newExtension);
-        newExtension.init(this);
-      }
-      return this;
-    }
-  }, {
-    key: "getExtensions",
-    value: function getExtensions() {
-      return this._extensions;
-    }
-  }, {
-    key: "getExtensionByName",
-    value: function getExtensionByName(extensionName) {
-      return this._extensions.find(function (extension) {
-        return extension.getName() === extensionName;
-      });
-    }
-  }, {
-    key: "callEvent",
-    value: function callEvent(eventName, value) {
-      var event = this._events.find(function (event) {
-        return event.getName() === eventName;
-      });
-      var eventData = new _EventData2.default(value);
-      if (event) {
-        event.getCallbacks().forEach(function (callback) {
-          return callback(eventData);
-        });
-      }
-      return eventData;
-    }
-  }, {
-    key: "registerEventListener",
-    value: function registerEventListener(eventName, callback) {
-      var event = this._events.find(function (event) {
-        return event.getName() === eventName;
-      });
-      if (!event) {
-        event = new _Event2.default(eventName);
-        this._events.push(event);
-      }
-      event.addCallback(callback);
-      return this;
-    }
-  }]);
+    _createClass(Manager, [{
+        key: "registerExtension",
+        value: function registerExtension(extensionName, extension) {
+            this._extensions[extensionName] = extension;
+            return this;
+        }
+    }, {
+        key: "getExtensions",
+        value: function getExtensions() {
+            return Object.values(this._extensions);
+        }
+    }, {
+        key: "getExtensionByName",
+        value: function getExtensionByName(extensionName) {
+            return this._extensions[extensionName];
+        }
+    }, {
+        key: "callEvent",
+        value: function callEvent(eventName, value) {
+            return this.getExtensions().filter(function (extension) {
+                return extension.hasEventListener(eventName);
+            }).map(function (extension) {
+                return extension.getEventListener(eventName)(value);
+            });
+        }
+    }]);
 
-  return Manager;
+    return Manager;
 }();
 
 exports.default = Manager;
@@ -211,99 +175,7 @@ exports.default = Manager;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Event = function () {
-  function Event(name) {
-    _classCallCheck(this, Event);
-
-    this._name = name;
-    this._callbacks = [];
-  }
-
-  _createClass(Event, [{
-    key: "getName",
-    value: function getName() {
-      return this._name;
-    }
-  }, {
-    key: "addCallback",
-    value: function addCallback(callback) {
-      this._callbacks.push(callback);
-      return this;
-    }
-  }, {
-    key: "getCallbacks",
-    value: function getCallbacks() {
-      return this._callbacks;
-    }
-  }]);
-
-  return Event;
-}();
-
-exports.default = Event;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var EventData = function () {
-  function EventData(initValue) {
-    _classCallCheck(this, EventData);
-
-    this._initValue = initValue;
-    this._response = [];
-  }
-
-  _createClass(EventData, [{
-    key: "getValue",
-    value: function getValue() {
-      return this._initValue;
-    }
-  }, {
-    key: "addResponse",
-    value: function addResponse(response) {
-      this._response.push(response);
-      return this;
-    }
-  }, {
-    key: "getResponse",
-    value: function getResponse() {
-      return this._response;
-    }
-  }]);
-
-  return EventData;
-}();
-
-exports.default = EventData;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -311,37 +183,48 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Extension = function () {
-  function Extension() {
-    _classCallCheck(this, Extension);
+    function Extension() {
+        _classCallCheck(this, Extension);
 
-    this._manager = null;
-    this._name = null;
-  }
+        this._properties = {};
+        this._events = {};
+    }
 
-  _createClass(Extension, [{
-    key: "init",
-    value: function init(manager) {
-      this._manager = manager;
-      return this;
-    }
-  }, {
-    key: "getManager",
-    value: function getManager() {
-      return this._manager;
-    }
-  }, {
-    key: "setName",
-    value: function setName(name) {
-      this._name = name;
-    }
-  }, {
-    key: "getName",
-    value: function getName() {
-      return this._name;
-    }
-  }]);
+    _createClass(Extension, [{
+        key: "setProperty",
+        value: function setProperty(propertyName, value) {
+            this._properties[propertyName] = value;
+            return this;
+        }
+    }, {
+        key: "hasProperty",
+        value: function hasProperty(propertyName) {
+            return this._properties.hasOwnProperty(propertyName);
+        }
+    }, {
+        key: "getProperty",
+        value: function getProperty(propertyName) {
+            return this._properties[propertyName];
+        }
+    }, {
+        key: "setEventListener",
+        value: function setEventListener(eventName, handler) {
+            this._events[eventName] = handler;
+            return this;
+        }
+    }, {
+        key: "hasEventListener",
+        value: function hasEventListener(eventName) {
+            return this._events.hasOwnProperty(eventName);
+        }
+    }, {
+        key: "getEventListener",
+        value: function getEventListener(eventName) {
+            return this._events[eventName];
+        }
+    }]);
 
-  return Extension;
+    return Extension;
 }();
 
 exports.default = Extension;
