@@ -16,14 +16,18 @@ export default class Manager {
         return Object.values(this._extensions).filter(extension => extension.hasProperty(propertyName));
     }
 
+    getExtensionsWithEventListener(eventName) {
+        return Object.values(this._extensions).filter(extension => extension.hasEventListener(eventName));
+    }
+
     getExtensionByName(extensionName) {
         return this._extensions[extensionName];
     }
 
     createEvent(eventName) {
         return value =>
-            this.getExtensions()
-                .filter(extension => extension.hasEventListener(eventName))
-                .map(extension => extension.getEventListener(eventName)(value));
+            this.getExtensionsWithEventListener(eventName).map(extension =>
+                extension.getEventListener(eventName)(value)
+            );
     }
 }

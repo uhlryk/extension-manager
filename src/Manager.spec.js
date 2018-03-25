@@ -89,5 +89,31 @@ describe("Manager", () => {
                 expect(response[0]).to.be.equal("SOME_VALUE");
             });
         });
+
+        describe("when registered extensions with different event listeners", () => {
+            let extensionA;
+            let extensionB;
+            let extensionC;
+            beforeEach(() => {
+                extensionA = new Extension();
+                extensionA.setEventListener("EVENT_1", () => {});
+                extensionB = new Extension();
+                extensionB.setEventListener("EVENT_1", () => {});
+                extensionB.setEventListener("EVENT_2", () => {});
+                extensionC = new Extension();
+                extensionC.setEventListener("EVENT_2", () => {});
+                manager.registerExtension("SOME_NAME_A", extensionA);
+                manager.registerExtension("SOME_NAME_B", extensionB);
+                manager.registerExtension("SOME_NAME_C", extensionC);
+            });
+
+            it("Should return extensions with specific event listener", () => {
+                const extensions = manager.getExtensionsWithEventListener("EVENT_1");
+                expect(extensions.length).to.be.equal(2);
+                expect(extensions).to.include(extensionA);
+                expect(extensions).to.include(extensionB);
+                expect(extensions).to.not.include(extensionC);
+            });
+        });
     });
 });

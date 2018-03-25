@@ -57,6 +57,9 @@ Return all extensions previously registered
 ### manager.getExtensionsWithProperty(propertyName: String): Array<extensions>
 Returns array of extensions if they have specific property
 
+### manager.getExtensionsWithEventListener(eventName: String): Array<extensions>
+Returns array of extensions if they have specific event listener
+
 ### manager.getExtensionByName(extensionInstanceName: String): extension
 Return extension by its name
 

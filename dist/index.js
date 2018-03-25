@@ -154,6 +154,13 @@ var Manager = function () {
             });
         }
     }, {
+        key: "getExtensionsWithEventListener",
+        value: function getExtensionsWithEventListener(eventName) {
+            return Object.values(this._extensions).filter(function (extension) {
+                return extension.hasEventListener(eventName);
+            });
+        }
+    }, {
         key: "getExtensionByName",
         value: function getExtensionByName(extensionName) {
             return this._extensions[extensionName];
@@ -164,9 +171,7 @@ var Manager = function () {
             var _this = this;
 
             return function (value) {
-                return _this.getExtensions().filter(function (extension) {
-                    return extension.hasEventListener(eventName);
-                }).map(function (extension) {
+                return _this.getExtensionsWithEventListener(eventName).map(function (extension) {
                     return extension.getEventListener(eventName)(value);
                 });
             };
