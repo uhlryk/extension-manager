@@ -37,7 +37,10 @@ manager.getExtensions().forEach(extension => {
 //reverse responsiblity, Each module can register listeners for any manager event and prepare response
 const event = manager.createEvent("doSomething");
 
-const result = event("some value");
+event("some value")
+    .then(response => {
+        //do some logic
+    });
 
 ```
 ## API
@@ -64,7 +67,16 @@ Returns array of extensions if they have specific event listener
 Return extension by its name
 
 ### manager.createEvent(eventName: String): Function
-Create event function. NExt step is to call this function to trigger event.
+Create event function. Next step is to call this function to trigger event.
+Response from triggering event return promise
+
+```
+    const event = manager.createEvent("onRenderHeader");
+    event()
+        .then(response => {
+            //do something with responses
+        })
+```
 
 ## LICENSE
 

@@ -1,3 +1,5 @@
+import Promise from "bluebird";
+
 export default class Manager {
     constructor() {
         this._extensions = {};
@@ -26,8 +28,10 @@ export default class Manager {
 
     createEvent(eventName) {
         return value =>
-            this.getExtensionsWithEventListener(eventName).map(extension =>
-                extension.getEventListener(eventName)(value)
+            Promise.all(
+                this.getExtensionsWithEventListener(eventName).map(extension =>
+                    extension.getEventListener(eventName)(value)
+                )
             );
     }
 }
