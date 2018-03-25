@@ -159,13 +159,17 @@ var Manager = function () {
             return this._extensions[extensionName];
         }
     }, {
-        key: "callEvent",
-        value: function callEvent(eventName, value) {
-            return this.getExtensions().filter(function (extension) {
-                return extension.hasEventListener(eventName);
-            }).map(function (extension) {
-                return extension.getEventListener(eventName)(value);
-            });
+        key: "createEvent",
+        value: function createEvent(eventName) {
+            var _this = this;
+
+            return function (value) {
+                return _this.getExtensions().filter(function (extension) {
+                    return extension.hasEventListener(eventName);
+                }).map(function (extension) {
+                    return extension.getEventListener(eventName)(value);
+                });
+            };
         }
     }]);
 

@@ -29,14 +29,14 @@ manager.registerExtension("some module 2", new SomeModule2())
 manager.registerExtension("some module N", new SomeModuleN())
 
 
-//here is for example header where any module can add menu item
+//list all extensions and do something with all of them.
 manager.getExtensions().forEach(extension => {
     //do some logic
 })
 
 //reverse responsiblity, Each module can register listeners for any manager event and prepare response
 const someResponse = manager.callEvent("doSomething", "someValue");
-
+npm i horpyna
 
 ```
 ## API
@@ -59,9 +59,8 @@ Returns array of extensions if they have specific property
 ### manager.getExtensionByName(extensionInstanceName: String): extension
 Return extension by its name
 
-### manager.callEvent(eventName: String, value: Any)
-Trigger event and call all event listeners with value
-
+### manager.createEvent(eventName: String): Function
+Create event function. NExt step is to call this function to trigger event.
 
 ## LICENSE
 

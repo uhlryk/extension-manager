@@ -82,7 +82,8 @@ describe("Manager", () => {
             });
 
             it("should call event handler on event call", () => {
-                const response = manager.callEvent("SOME_EVENT", "SOME_VALUE");
+                const event = manager.createEvent("SOME_EVENT");
+                const response = event("SOME_VALUE");
                 expect(eventHandler.calledOnce).be.true();
                 expect(response.length).to.be.equal(1);
                 expect(response[0]).to.be.equal("SOME_VALUE");

@@ -20,9 +20,10 @@ export default class Manager {
         return this._extensions[extensionName];
     }
 
-    callEvent(eventName, value) {
-        return this.getExtensions()
-            .filter(extension => extension.hasEventListener(eventName))
-            .map(extension => extension.getEventListener(eventName)(value));
+    createEvent(eventName) {
+        return value =>
+            this.getExtensions()
+                .filter(extension => extension.hasEventListener(eventName))
+                .map(extension => extension.getEventListener(eventName)(value));
     }
 }
