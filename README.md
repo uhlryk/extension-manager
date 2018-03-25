@@ -35,8 +35,9 @@ manager.getExtensions().forEach(extension => {
 })
 
 //reverse responsiblity, Each module can register listeners for any manager event and prepare response
-const someResponse = manager.callEvent("doSomething", "someValue");
-npm i horpyna
+const event = manager.createEvent("doSomething");
+
+const result = event("some value");
 
 ```
 ## API
