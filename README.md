@@ -54,16 +54,34 @@ Each module should have one root class with all settings and this class should e
 ### manager.registerExtension(extensionInstanceName: String, extension: Extension): manager
 Allow to register/add any new extension and return same manager instance
 
-### manager.getExtensions(): Array<extension>
-Return all extensions previously registered
+### manager.getExtensions([onlyActive = true]): Array<extension>
+When `onlyActive` flag is true it will return all **active** extensions previously registered
+When flag is false then it will return all extensions.
 
-### manager.getExtensionsWithProperty(propertyName: String): Array<extensions>
-Returns array of extensions if they have specific property
+### manager.getExtensionsWithProperty(propertyName: String [, onlyActive = true]): Array<extensions>
+When `onlyActive` flag is true it will return array of active extensions with specific property
+When flag is false then it will return all extensions with specific property
 
-### manager.getExtensionsWithEventListener(eventName: String): Array<extensions>
-Returns array of extensions if they have specific event listener
+### manager.getExtensionsWithEventListener(eventName: String) [, onlyActive = true]: Array<extensions>
+When `onlyActive` flag is true it will return array of active extensions with specific event listener
+When flag is false then it will return all extensions with specific event listener
 
-### manager.getExtensionByName(extensionInstanceName: String): extension
+### manager.isExtensionActive(extensionInstanceName: String): Boolean
+Return true if extension with ext ensionInstanceName exist and is active. Otherwise false
+
+### manager.hasExtension(extensionInstanceName: String): Boolean
+
+Returns true if extension with extensionInstanceName exists.
+
+### manager.disableExtension(extensionInstanceName: String): Boolean
+
+Disable extension with extensionInstanceName name then it will return true. If extension doesn't exist it will return false
+
+### manager.enableExtension(extensionInstanceName: String): Boolean
+
+Enable extension with extensionInstanceName name then it will return true. If extension doesn't exist it will return false
+
+### manager.getExtension(extensionInstanceName: String): extension
 Return extension by its name
 
 ### manager.createEvent(eventName: String): Function

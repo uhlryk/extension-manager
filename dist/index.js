@@ -144,32 +144,73 @@ var Manager = function () {
     _createClass(Manager, [{
         key: "registerExtension",
         value: function registerExtension(extensionName, extension) {
-            this._extensions[extensionName] = extension;
+            this._extensions[extensionName] = { extension: extension, enabled: true };
             return this;
         }
     }, {
         key: "getExtensions",
         value: function getExtensions() {
-            return Object.values(this._extensions);
+            var onlyActive = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+            return Object.values(this._extensions).filter(function (extensionData) {
+                return onlyActive ? extensionData.enabled : true;
+            }).map(function (extensionData) {
+                return extensionData.extension;
+            });
         }
     }, {
         key: "getExtensionsWithProperty",
         value: function getExtensionsWithProperty(propertyName) {
-            return Object.values(this._extensions).filter(function (extension) {
+            var onlyActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+            return this.getExtensions(onlyActive).filter(function (extension) {
                 return extension.hasProperty(propertyName);
             });
         }
     }, {
         key: "getExtensionsWithEventListener",
         value: function getExtensionsWithEventListener(eventName) {
-            return Object.values(this._extensions).filter(function (extension) {
+            var onlyActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+            return this.getExtensions(onlyActive).filter(function (extension) {
                 return extension.hasEventListener(eventName);
             });
         }
     }, {
-        key: "getExtensionByName",
-        value: function getExtensionByName(extensionName) {
-            return this._extensions[extensionName];
+        key: "isExtensionActive",
+        value: function isExtensionActive(extensionName) {
+            if (this.hasExtension(extensionName)) {
+                return this._extensions[extensionName].enabled;
+            }
+            return false;
+        }
+    }, {
+        key: "disableExtension",
+        value: function disableExtension(extensionName) {
+            if (this.hasExtension(extensionName)) {
+                this._extensions[extensionName].enabled = false;
+                return true;
+            }
+            return false;
+        }
+    }, {
+        key: "enableExtension",
+        value: function enableExtension(extensionName) {
+            if (this.hasExtension(extensionName)) {
+                this._extensions[extensionName].enabled = true;
+                return true;
+            }
+            return false;
+        }
+    }, {
+        key: "hasExtension",
+        value: function hasExtension(extensionName) {
+            return !!this._extensions[extensionName];
+        }
+    }, {
+        key: "getExtension",
+        value: function getExtension(extensionName) {
+            return this._extensions[extensionName].extension;
         }
     }, {
         key: "createEvent",

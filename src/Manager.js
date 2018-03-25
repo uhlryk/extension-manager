@@ -6,24 +6,53 @@ export default class Manager {
     }
 
     registerExtension(extensionName, extension) {
-        this._extensions[extensionName] = extension;
+        this._extensions[extensionName] = { extension, enabled: true };
         return this;
     }
 
-    getExtensions() {
-        return Object.values(this._extensions);
+    getExtensions(onlyActive = true) {
+        return Object.values(this._extensions)
+            .filter(extensionData => (onlyActive ? extensionData.enabled : true))
+            .map(extensionData => extensionData.extension);
     }
 
-    getExtensionsWithProperty(propertyName) {
-        return Object.values(this._extensions).filter(extension => extension.hasProperty(propertyName));
+    getExtensionsWithProperty(propertyName, onlyActive = true) {
+        return this.getExtensions(onlyActive).filter(extension => extension.hasProperty(propertyName));
     }
 
-    getExtensionsWithEventListener(eventName) {
-        return Object.values(this._extensions).filter(extension => extension.hasEventListener(eventName));
+    getExtensionsWithEventListener(eventName, onlyActive = true) {
+        return this.getExtensions(onlyActive).filter(extension => extension.hasEventListener(eventName));
     }
 
-    getExtensionByName(extensionName) {
-        return this._extensions[extensionName];
+    isExtensionActive(extensionName) {
+        if (this.hasExtension(extensionName)) {
+            return this._extensions[extensionName].enabled;
+        }
+        return false;
+    }
+
+    disableExtension(extensionName) {
+        if (this.hasExtension(extensionName)) {
+            this._extensions[extensionName].enabled = false;
+            return true;
+        }
+        return false;
+    }
+
+    enableExtension(extensionName) {
+        if (this.hasExtension(extensionName)) {
+            this._extensions[extensionName].enabled = true;
+            return true;
+        }
+        return false;
+    }
+
+    hasExtension(extensionName) {
+        return !!this._extensions[extensionName];
+    }
+
+    getExtension(extensionName) {
+        return this._extensions[extensionName].extension;
     }
 
     createEvent(eventName) {
