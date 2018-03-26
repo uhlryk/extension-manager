@@ -6,6 +6,45 @@ describe("Extension", () => {
         expect(extension).to.be.an.instanceof(Extension);
     });
 
+    it("should create extension instance with empty object arg", () => {
+        const extension = new Extension({});
+        expect(extension).to.be.an.instanceof(Extension);
+    });
+
+    it("should create extension instance with object with properties", () => {
+        const extension = new Extension({
+            properties: {
+                someKey: "someValue"
+            }
+        });
+        expect(extension).to.be.an.instanceof(Extension);
+        expect(extension._properties["someKey"]).to.be.equal("someValue");
+    });
+
+    it("should create extension instance with object with events", () => {
+        const eventHandler = sinon.stub();
+        const extension = new Extension({
+            events: {
+                someKey: eventHandler
+            }
+        });
+        expect(extension).to.be.an.instanceof(Extension);
+        expect(extension._events["someKey"]).to.be.equal(eventHandler);
+    });
+
+    it("should create extension instance with object with events and properties", () => {
+        const eventHandler = sinon.stub();
+        const extension = new Extension({
+            events: {
+                someKey1: "someValue",
+                someKey2: eventHandler
+            }
+        });
+        expect(extension).to.be.an.instanceof(Extension);
+        expect(extension._events["someKey1"]).to.be.equal("someValue");
+        expect(extension._events["someKey2"]).to.be.equal(eventHandler);
+    });
+
     describe("when extension instance exist", () => {
         let extension;
 

@@ -1,7 +1,7 @@
 export default class Extension {
-    constructor() {
-        this._properties = {};
-        this._events = {};
+    constructor(data) {
+        this._properties = (data && data.properties) || {};
+        this._events = (data && data.events) || {};
     }
 
     setProperty(propertyName, value) {

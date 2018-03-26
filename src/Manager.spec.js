@@ -27,6 +27,38 @@ describe("Manager", () => {
             });
         });
 
+        it("should add extension as an empty object", () => {
+            manager.registerExtension("SOME_NAME", {});
+            expect(manager._extensions["SOME_NAME"]).to.have.property("extension");
+            expect(manager._extensions["SOME_NAME"]).to.have.property("enabled", true);
+            expect(manager._extensions["SOME_NAME"].extension).to.be.instanceOf(Extension);
+        });
+
+        it("should add extension as an object with properties", () => {
+            manager.registerExtension("SOME_NAME", {
+                properties: {
+                    someKey: "someValue"
+                }
+            });
+            expect(manager._extensions["SOME_NAME"]).to.have.property("extension");
+            expect(manager._extensions["SOME_NAME"]).to.have.property("enabled", true);
+            expect(manager._extensions["SOME_NAME"].extension).to.be.instanceOf(Extension);
+            expect(manager._extensions["SOME_NAME"].extension._properties["someKey"]).to.be.equal("someValue");
+        });
+
+        it("should add extension as an object with events", () => {
+            let someHandler = sinon.stub();
+            manager.registerExtension("SOME_NAME", {
+                events: {
+                    someKey: someHandler
+                }
+            });
+            expect(manager._extensions["SOME_NAME"]).to.have.property("extension");
+            expect(manager._extensions["SOME_NAME"]).to.have.property("enabled", true);
+            expect(manager._extensions["SOME_NAME"].extension).to.be.instanceOf(Extension);
+            expect(manager._extensions["SOME_NAME"].extension._events["someKey"]).to.be.equal(someHandler);
+        });
+
         describe("when registered extension", () => {
             let extension;
             beforeEach(() => {

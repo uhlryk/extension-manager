@@ -12,6 +12,16 @@ export default class Manager {
             .when(Overload.STRING, Overload.INSTANCE(Extension))
             .do((extensionName, extension) => {
                 this._extensions[extensionName] = { extension, enabled: true };
+            })
+            .when(Overload.STRING, Overload.OBJECT)
+            .do((extensionName, { properties, events }) => {
+                this._extensions[extensionName] = {
+                    extension: new Extension({
+                        properties,
+                        events
+                    }),
+                    enabled: true
+                };
             });
         return this;
     }

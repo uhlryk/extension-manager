@@ -89,11 +89,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Extension = function () {
-    function Extension() {
+    function Extension(data) {
         _classCallCheck(this, Extension);
 
-        this._properties = {};
-        this._events = {};
+        this._properties = data && data.properties || {};
+        this._events = data && data.events || {};
     }
 
     _createClass(Extension, [{
@@ -218,6 +218,17 @@ var Manager = function () {
 
             _functionOverloader2.default.set.apply(_functionOverloader2.default, arguments).when(_functionOverloader2.default.STRING, _functionOverloader2.default.INSTANCE(_Extension2.default)).do(function (extensionName, extension) {
                 _this._extensions[extensionName] = { extension: extension, enabled: true };
+            }).when(_functionOverloader2.default.STRING, _functionOverloader2.default.OBJECT).do(function (extensionName, _ref) {
+                var properties = _ref.properties,
+                    events = _ref.events;
+
+                _this._extensions[extensionName] = {
+                    extension: new _Extension2.default({
+                        properties: properties,
+                        events: events
+                    }),
+                    enabled: true
+                };
             });
             return this;
         }
