@@ -70,51 +70,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(1);
-module.exports = __webpack_require__(2);
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-polyfill");
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Manager = __webpack_require__(3);
-
-var _Manager2 = _interopRequireDefault(_Manager);
-
-var _Extension = __webpack_require__(5);
-
-var _Extension2 = _interopRequireDefault(_Extension);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = {
-  Manager: _Manager2.default,
-  Extension: _Extension2.default
-};
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -126,9 +86,119 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _bluebird = __webpack_require__(4);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Extension = function () {
+    function Extension() {
+        _classCallCheck(this, Extension);
+
+        this._properties = {};
+        this._events = {};
+    }
+
+    _createClass(Extension, [{
+        key: "setProperty",
+        value: function setProperty(propertyName, value) {
+            this._properties[propertyName] = value;
+            return this;
+        }
+    }, {
+        key: "hasProperty",
+        value: function hasProperty(propertyName) {
+            return this._properties.hasOwnProperty(propertyName);
+        }
+    }, {
+        key: "getProperty",
+        value: function getProperty(propertyName) {
+            return this._properties[propertyName];
+        }
+    }, {
+        key: "setEventListener",
+        value: function setEventListener(eventName, handler) {
+            this._events[eventName] = handler;
+            return this;
+        }
+    }, {
+        key: "hasEventListener",
+        value: function hasEventListener(eventName) {
+            return this._events.hasOwnProperty(eventName);
+        }
+    }, {
+        key: "getEventListener",
+        value: function getEventListener(eventName) {
+            return this._events[eventName];
+        }
+    }]);
+
+    return Extension;
+}();
+
+exports.default = Extension;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(2);
+module.exports = __webpack_require__(3);
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-polyfill");
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _Manager = __webpack_require__(4);
+
+var _Manager2 = _interopRequireDefault(_Manager);
+
+var _Extension = __webpack_require__(0);
+
+var _Extension2 = _interopRequireDefault(_Extension);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  Manager: _Manager2.default,
+  Extension: _Extension2.default
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _bluebird = __webpack_require__(5);
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
+
+var _functionOverloader = __webpack_require__(6);
+
+var _functionOverloader2 = _interopRequireDefault(_functionOverloader);
+
+var _Extension = __webpack_require__(0);
+
+var _Extension2 = _interopRequireDefault(_Extension);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -143,8 +213,12 @@ var Manager = function () {
 
     _createClass(Manager, [{
         key: "registerExtension",
-        value: function registerExtension(extensionName, extension) {
-            this._extensions[extensionName] = { extension: extension, enabled: true };
+        value: function registerExtension() {
+            var _this = this;
+
+            _functionOverloader2.default.set.apply(_functionOverloader2.default, arguments).when(_functionOverloader2.default.STRING, _functionOverloader2.default.INSTANCE(_Extension2.default)).do(function (extensionName, extension) {
+                _this._extensions[extensionName] = { extension: extension, enabled: true };
+            });
             return this;
         }
     }, {
@@ -218,10 +292,10 @@ var Manager = function () {
     }, {
         key: "createEvent",
         value: function createEvent(eventName) {
-            var _this = this;
+            var _this2 = this;
 
             return function (value) {
-                return _bluebird2.default.all(_this.getExtensionsWithEventListener(eventName).map(function (extension) {
+                return _bluebird2.default.all(_this2.getExtensionsWithEventListener(eventName).map(function (extension) {
                     return extension.getEventListener(eventName)(value);
                 }));
             };
@@ -234,72 +308,16 @@ var Manager = function () {
 exports.default = Manager;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 6 */
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Extension = function () {
-    function Extension() {
-        _classCallCheck(this, Extension);
-
-        this._properties = {};
-        this._events = {};
-    }
-
-    _createClass(Extension, [{
-        key: "setProperty",
-        value: function setProperty(propertyName, value) {
-            this._properties[propertyName] = value;
-            return this;
-        }
-    }, {
-        key: "hasProperty",
-        value: function hasProperty(propertyName) {
-            return this._properties.hasOwnProperty(propertyName);
-        }
-    }, {
-        key: "getProperty",
-        value: function getProperty(propertyName) {
-            return this._properties[propertyName];
-        }
-    }, {
-        key: "setEventListener",
-        value: function setEventListener(eventName, handler) {
-            this._events[eventName] = handler;
-            return this;
-        }
-    }, {
-        key: "hasEventListener",
-        value: function hasEventListener(eventName) {
-            return this._events.hasOwnProperty(eventName);
-        }
-    }, {
-        key: "getEventListener",
-        value: function getEventListener(eventName) {
-            return this._events[eventName];
-        }
-    }]);
-
-    return Extension;
-}();
-
-exports.default = Extension;
+module.exports = require("function-overloader");
 
 /***/ })
 /******/ ]);

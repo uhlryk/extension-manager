@@ -1,12 +1,18 @@
 import Promise from "bluebird";
+import Overload from "function-overloader";
+import Extension from "./Extension";
 
 export default class Manager {
     constructor() {
         this._extensions = {};
     }
 
-    registerExtension(extensionName, extension) {
-        this._extensions[extensionName] = { extension, enabled: true };
+    registerExtension() {
+        Overload.set(...arguments)
+            .when(Overload.STRING, Overload.INSTANCE(Extension))
+            .do((extensionName, extension) => {
+                this._extensions[extensionName] = { extension, enabled: true };
+            });
         return this;
     }
 
