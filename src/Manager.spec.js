@@ -41,10 +41,52 @@ describe("Manager", () => {
 
             it("should return extension by name", () => {
                 expect(manager.getExtension("SOME_NAME")).to.be.equal(extension);
+                expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
+                    extension: extension,
+                    enabled: true
+                });
             });
 
             it("should return null if extension with name doesn't exist", () => {
                 expect(manager.getExtension("NON_EXISTING_NAME")).to.be.equal(null);
+            });
+
+            it("should return true for enabled extension", () => {
+                expect(manager.isExtensionActive("SOME_NAME")).to.be.true();
+            });
+
+            it("should return true if extension is registered", () => {
+                expect(manager.hasExtension("SOME_NAME")).to.be.true();
+            });
+
+            it("should disable extension", () => {
+                expect(manager.disableExtension("SOME_NAME")).to.be.true();
+                expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
+                    extension: extension,
+                    enabled: false
+                });
+            });
+
+            it("should return false when disable non existing extension", () => {
+                expect(manager.disableExtension("NON_EXISTING_NAME")).to.be.false();
+            });
+
+            describe("when extension is disabled", () => {
+                beforeEach(() => {
+                    manager.disableExtension("SOME_NAME");
+                });
+
+                it("should return false when extension is disabled", () => {
+                    expect(manager.isExtensionActive("SOME_NAME")).to.be.false();
+                });
+
+                it("should enable extension", () => {
+                    expect(manager.enableExtension("SOME_NAME")).to.be.true();
+                    expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
+                        extension: extension,
+                        enabled: true
+                    });
+                });
             });
         });
 
