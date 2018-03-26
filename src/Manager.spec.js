@@ -21,7 +21,10 @@ describe("Manager", () => {
         it("should add extension", () => {
             const extension = new Extension();
             manager.registerExtension("SOME_NAME", extension);
-            expect(manager._extensions["SOME_NAME"]).be.equal(extension);
+            expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
+                extension: extension,
+                enabled: true
+            });
         });
 
         describe("when registered extension", () => {
@@ -37,11 +40,11 @@ describe("Manager", () => {
             });
 
             it("should return extension by name", () => {
-                expect(manager.getExtensionByName("SOME_NAME")).to.be.equal(extension);
+                expect(manager.getExtension("SOME_NAME")).to.be.equal(extension);
             });
 
             it("should return null if extension with name doesn't exist", () => {
-                expect(manager.getExtensionByName("NON_EXISTING_NAME")).to.be.equal(undefined);
+                expect(manager.getExtension("NON_EXISTING_NAME")).to.be.equal(null);
             });
         });
 

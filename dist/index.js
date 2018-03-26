@@ -210,7 +210,10 @@ var Manager = function () {
     }, {
         key: "getExtension",
         value: function getExtension(extensionName) {
-            return this._extensions[extensionName].extension;
+            if (this.hasExtension(extensionName)) {
+                return this._extensions[extensionName].extension;
+            }
+            return null;
         }
     }, {
         key: "createEvent",

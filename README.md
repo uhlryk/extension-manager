@@ -75,14 +75,14 @@ Returns true if extension with extensionInstanceName exists.
 
 ### manager.disableExtension(extensionInstanceName: String): Boolean
 
-Disable extension with extensionInstanceName name then it will return true. If extension doesn't exist it will return false
+Disable extension with undefinedextensionInstanceName name then it will return true. If extension doesn't exist it will return false
 
 ### manager.enableExtension(extensionInstanceName: String): Boolean
 
 Enable extension with extensionInstanceName name then it will return true. If extension doesn't exist it will return false
 
 ### manager.getExtension(extensionInstanceName: String): extension
-Return extension by its name
+Return extension by its name or null if doesn't exist.
 
 ### manager.createEvent(eventName: String): Function
 Create event function. Next step is to call this function to trigger event.

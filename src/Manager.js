@@ -52,7 +52,10 @@ export default class Manager {
     }
 
     getExtension(extensionName) {
-        return this._extensions[extensionName].extension;
+        if (this.hasExtension(extensionName)) {
+            return this._extensions[extensionName].extension;
+        }
+        return null;
     }
 
     createEvent(eventName) {
