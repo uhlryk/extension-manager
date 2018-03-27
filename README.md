@@ -94,7 +94,7 @@ manager
     .registerExtension("someCustomModuleNameC", someCustomModuleC());
 ```
 
-Lets prepare event and call it for running all modules event handlers listening for this event.
+Lets prepare event and call it.
 
 ```javascript
 const event = manager.createEvent("customEventA");
@@ -110,6 +110,7 @@ event()
         */
     });
 ```
+It invoked in each listening module proper event handler.
 
 Lets get property values from all modules
 
