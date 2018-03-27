@@ -1,6 +1,6 @@
 {
   "name": "extensioner",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "description": "Extensioner is responsible for managing apps modules. Scalable apps become easy",
   "main": "dist/index.js",
   "scripts": {
@@ -19,9 +19,9 @@
     "url": "git+https://github.com/uhlryk/extensioner.git"
   },
   "keywords": [
-      "managing",
-      "scalability",
-      "modules"
+    "managing",
+    "scalability",
+    "modules"
   ],
   "author": "Krzysztof Sztompka <sztompka.krzysztof@gmail.com>",
   "license": "MIT",
