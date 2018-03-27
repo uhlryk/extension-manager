@@ -1,7 +1,7 @@
 {
   "name": "extensioner",
   "version": "1.16.0",
-  "description": "",
+  "description": "Extensioner is responsible for managing apps modules. Scalable apps become easy",
   "main": "dist/index.js",
   "scripts": {
     "prettier-all": "prettier --config .prettierrc --write 'src/**/*.js'",
@@ -18,7 +18,11 @@
     "type": "git",
     "url": "git+https://github.com/uhlryk/extensioner.git"
   },
-  "keywords": [],
+  "keywords": [
+      "managing",
+      "scalability",
+      "modules"
+  ],
   "author": "Krzysztof Sztompka <sztompka.krzysztof@gmail.com>",
   "license": "MIT",
   "bugs": {
