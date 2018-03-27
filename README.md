@@ -11,7 +11,7 @@ A problem appears when each module should be configured in multiple places. And 
 
 This library is responsible for managing all app modules. You only initialize everything once and then just register and unregister new and old modules.
 
-## Use case
+## EXAMPLE
 
 In each module lets create init file
 
@@ -32,7 +32,7 @@ export default {
 ```
 As you can see this is just an object with properties : `properties` and `events`
 
-someCustomModuleB init file
+someCustomModuleB init file:
 
 //modules/someCustomModuleB/index.js
 ```javascript
@@ -78,7 +78,7 @@ export default function someCustomModuleC(someInitOptions) {
 In above init file we created function which will return extension object
 
 
-Lets create manager instance and register few example custom extensions
+Lets create manager instance and register modules
 
 //index.js
 ```javascript
