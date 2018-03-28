@@ -188,17 +188,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _bluebird = __webpack_require__(5);
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
-var _functionOverloader = __webpack_require__(6);
+var _functionOverloader = __webpack_require__(5);
 
 var _functionOverloader2 = _interopRequireDefault(_functionOverloader);
 
 var _Extension = __webpack_require__(0);
 
 var _Extension2 = _interopRequireDefault(_Extension);
+
+var _asyncList = __webpack_require__(6);
+
+var _asyncList2 = _interopRequireDefault(_asyncList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -305,10 +305,10 @@ var Manager = function () {
         value: function createEvent(eventName) {
             var _this2 = this;
 
+            var composeFunction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _asyncList2.default;
+
             return function (value) {
-                return _bluebird2.default.all(_this2.getExtensionsWithEventListener(eventName).map(function (extension) {
-                    return extension.getEventListener(eventName)(value);
-                }));
+                return composeFunction(_this2.getExtensionsWithEventListener(eventName), eventName, value);
             };
         }
     }]);
@@ -322,13 +322,36 @@ exports.default = Manager;
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = require("bluebird");
+module.exports = require("function-overloader");
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _bluebird = __webpack_require__(7);
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (extensions, eventName, value) {
+    return _bluebird2.default.all(extensions.map(function (extension) {
+        return extension.getEventListener(eventName)(value);
+    }));
+};
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
-module.exports = require("function-overloader");
+module.exports = require("bluebird");
 
 /***/ })
 /******/ ]);

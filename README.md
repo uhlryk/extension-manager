@@ -170,17 +170,22 @@ Enable extension with extensionInstanceName name then it will return true. If ex
 #### manager.getExtension(extensionInstanceName: String): extension
 Return extension by its name or null if doesn't exist.
 
-#### manager.createEvent(eventName: String): Function
+#### manager.createEvent(eventName: String [, composeFunction: Function]): Function
 Create event function. Next step is to call this function to trigger event.
-Response from triggering event return promise
+Response from compose function
 
+```javascript
+const event = manager.createEvent("onRenderHeader");
+event()
+    .then(response => {
+        //do something with responses
+    })
 ```
-    const event = manager.createEvent("onRenderHeader");
-    event()
-        .then(response => {
-            //do something with responses
-        })
+composeFunction is function which compose responses from corresponding event handler.
+```javascript 
+function composeFunction(extensions: <Extension>Array, eventName: String, value: any): any
 ```
+By default is used `asyncList` function which will call async all event handlers, returns response which will be fulfilled with array of responses.  
 
 ### Extension component
 

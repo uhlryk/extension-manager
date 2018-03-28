@@ -1,6 +1,6 @@
-import Promise from "bluebird";
 import Overload from "function-overloader";
 import Extension from "./Extension";
+import asyncListCompose from "./compose/asyncList";
 
 export default class Manager {
     constructor() {
@@ -74,12 +74,7 @@ export default class Manager {
         return null;
     }
 
-    createEvent(eventName) {
-        return value =>
-            Promise.all(
-                this.getExtensionsWithEventListener(eventName).map(extension =>
-                    extension.getEventListener(eventName)(value)
-                )
-            );
+    createEvent(eventName, composeFunction = asyncListCompose) {
+        return value => composeFunction(this.getExtensionsWithEventListener(eventName), eventName, value);
     }
 }
