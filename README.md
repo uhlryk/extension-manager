@@ -122,47 +122,55 @@ manager.getExtensionsWithProperty("customPropertyA").forEach(extension => {
 
 ## API
 
-### new Manager(): manager
+### Manager component
+
+#### new Manager(): manager
 Creates new manager
 
-### new Extension(): extension
+#### new Extension(): extension
 Each module should have one root class with all settings and this class should extend Extension
 
-### manager.registerExtension(extensionInstanceName: String, extension: Extension or Object): manager
+#### manager.registerExtension(extensionInstanceName: String, extension: Extension): manager
 Allow to register/add any new extension and return same manager instance.
-Second argument can be instance of Extension class or just simple object with properties: `properties` and `events`
+Second argument can be instance of Extension class
 
-### manager.getExtensions([onlyActive = true]): Array<extension>
+OR
+
+#### manager.registerExtension(extensionInstanceName: String, extension: Object): manager
+Allow to register/add any new extension and return same manager instance.
+Second argument is simple object with properties: `properties` and `events`
+
+#### manager.getExtensions([onlyActive = true]): Array<extension>
 When `onlyActive` flag is true it will return all **active** extensions previously registered
 When flag is false then it will return all extensions.
 
-### manager.getExtensionsWithProperty(propertyName: String [, onlyActive = true]): Array<extensions>
+#### manager.getExtensionsWithProperty(propertyName: String [, onlyActive = true]): Array<extensions>
 When `onlyActive` flag is true it will return array of active extensions with specific property
 When flag is false then it will return all extensions with specific property
 
-### manager.getExtensionsWithEventListener(eventName: String) [, onlyActive = true]: Array<extensions>
+#### manager.getExtensionsWithEventListener(eventName: String) [, onlyActive = true]: Array<extensions>
 When `onlyActive` flag is true it will return array of active extensions with specific event listener
 When flag is false then it will return all extensions with specific event listener
 
-### manager.isExtensionActive(extensionInstanceName: String): Boolean
+#### manager.isExtensionActive(extensionInstanceName: String): Boolean
 Return true if extension with ext ensionInstanceName exist and is active. Otherwise false
 
-### manager.hasExtension(extensionInstanceName: String): Boolean
+#### manager.hasExtension(extensionInstanceName: String): Boolean
 
 Returns true if extension with extensionInstanceName exists.
 
-### manager.disableExtension(extensionInstanceName: String): Boolean
+#### manager.disableExtension(extensionInstanceName: String): Boolean
 
 Disable extension with undefinedextensionInstanceName name then it will return true. If extension doesn't exist it will return false
 
-### manager.enableExtension(extensionInstanceName: String): Boolean
+#### manager.enableExtension(extensionInstanceName: String): Boolean
 
 Enable extension with extensionInstanceName name then it will return true. If extension doesn't exist it will return false
 
-### manager.getExtension(extensionInstanceName: String): extension
+#### manager.getExtension(extensionInstanceName: String): extension
 Return extension by its name or null if doesn't exist.
 
-### manager.createEvent(eventName: String): Function
+#### manager.createEvent(eventName: String): Function
 Create event function. Next step is to call this function to trigger event.
 Response from triggering event return promise
 
@@ -173,6 +181,29 @@ Response from triggering event return promise
             //do something with responses
         })
 ```
+
+### Extension component
+
+#### new Extension([extensionData: Object]): extension
+Create new extension. ExtensionData is simple object with properties: `properties` and `events`.
+
+#### extension.setProperty(propertyName: String, value: any): extension
+Add new property to module
+
+#### extension.hasProperty(propertyName: String): boolean
+Check if module has property.
+
+#### extension.getProperty(propertyName: String): any
+Return property value.
+
+#### extension.setEventListener(eventName: String, handler: Function): extension
+Add new event listener 
+
+#### extension.hasEventListener(eventName: String): boolean
+Check if module has event Listener.
+
+#### extension.getEventListener(eventName: String): Function
+Return event handler.
 
 ## LICENSE
 
