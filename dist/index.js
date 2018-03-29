@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -139,41 +139,32 @@ exports.default = Extension;
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(2);
-module.exports = __webpack_require__(3);
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-polyfill");
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
-var _Manager = __webpack_require__(4);
-
-var _Manager2 = _interopRequireDefault(_Manager);
-
-var _Extension = __webpack_require__(0);
-
-var _Extension2 = _interopRequireDefault(_Extension);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = {
-  Manager: _Manager2.default,
-  Extension: _Extension2.default
+exports.default = function (extensions, eventName, value) {
+    return extensions.map(function (extension) {
+        return extension.getEventListener(eventName)(value);
+    });
 };
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(3);
+module.exports = __webpack_require__(4);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-polyfill");
 
 /***/ }),
 /* 4 */
@@ -186,9 +177,45 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _Manager = __webpack_require__(5);
+
+var _Manager2 = _interopRequireDefault(_Manager);
+
+var _Extension = __webpack_require__(0);
+
+var _Extension2 = _interopRequireDefault(_Extension);
+
+var _syncList = __webpack_require__(1);
+
+var _syncList2 = _interopRequireDefault(_syncList);
+
+var _asyncList = __webpack_require__(7);
+
+var _asyncList2 = _interopRequireDefault(_asyncList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    Manager: _Manager2.default,
+    Extension: _Extension2.default,
+    syncListCompose: _syncList2.default,
+    asyncListCompose: _asyncList2.default
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _functionOverloader = __webpack_require__(5);
+var _functionOverloader = __webpack_require__(6);
 
 var _functionOverloader2 = _interopRequireDefault(_functionOverloader);
 
@@ -196,9 +223,9 @@ var _Extension = __webpack_require__(0);
 
 var _Extension2 = _interopRequireDefault(_Extension);
 
-var _asyncList = __webpack_require__(6);
+var _syncList = __webpack_require__(1);
 
-var _asyncList2 = _interopRequireDefault(_asyncList);
+var _syncList2 = _interopRequireDefault(_syncList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -305,7 +332,7 @@ var Manager = function () {
         value: function createEvent(eventName) {
             var _this2 = this;
 
-            var composeFunction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _asyncList2.default;
+            var composeFunction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _syncList2.default;
 
             return function (value) {
                 return composeFunction(_this2.getExtensionsWithEventListener(eventName), eventName, value);
@@ -319,13 +346,13 @@ var Manager = function () {
 exports.default = Manager;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = require("function-overloader");
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -335,7 +362,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _bluebird = __webpack_require__(7);
+var _bluebird = __webpack_require__(8);
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
 
@@ -348,7 +375,7 @@ exports.default = function (extensions, eventName, value) {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");

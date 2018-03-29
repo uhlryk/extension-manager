@@ -1,6 +1,6 @@
 import Overload from "function-overloader";
 import Extension from "./Extension";
-import asyncListCompose from "./compose/asyncList";
+import syncListCompose from "./compose/syncList";
 
 export default class Manager {
     constructor() {
@@ -74,7 +74,7 @@ export default class Manager {
         return null;
     }
 
-    createEvent(eventName, composeFunction = asyncListCompose) {
+    createEvent(eventName, composeFunction = syncListCompose) {
         return value => composeFunction(this.getExtensionsWithEventListener(eventName), eventName, value);
     }
 }

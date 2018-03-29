@@ -69,7 +69,7 @@ export default function someCustomModuleC(someInitOptions) {
             customPropertyC: "customValueCC"
         },
         events: {
-            customEventB: () => "customResponseFromEventBC",
+            customEventB: () => "customResponseFromEventCB",
             customEventC: () => "customResponseFromEventCC"
         }
     }
@@ -99,18 +99,32 @@ Lets prepare event and call it.
 ```javascript
 const event = manager.createEvent("customEventA");
 
+const responses = event();
+/**
+*   responses is equal:
+*   [
+*       "customResponseFromEventAA",
+*       "customResponseFromEventBA"
+*   ]
+*/
+```
+
+Lets prepare event with async event resolver
+```javascript
+import { asyncListCompose } from "extensioner";
+const event = manager.createEvent("customEventB", asyncListCompose);
+
 event()
     .then(responses => {
         /**
         *   responses is equal:
         *   [
-        *       "customResponseFromEventAA",
-        *       "customResponseFromEventBA"
+        *       "customResponseFromEventAB",
+        *       "customResponseFromEventCB"
         *   ]
         */
     });
 ```
-It invoked in each listening module proper event handler.
 
 Lets get property values from all modules
 
@@ -175,18 +189,32 @@ Create event function. Next step is to call this function to trigger event.
 Response from compose function
 
 ```javascript
-const event = manager.createEvent("onRenderHeader");
+const event = manager.createEvent("onRenderHeader", (extensions, eventName, value) => { extensions.map(extension => extension.getEventListener(eventName)(value)) });
 event()
     .then(response => {
         //do something with responses
     })
 ```
+
+#### Compose functions
+
 composeFunction is function which compose responses from corresponding event handler.
 ```javascript 
 function composeFunction(extensions: <Extension>Array, eventName: String, value: any): any
 ```
-By default is used `asyncList` function which will call async all event handlers, returns response which will be fulfilled with array of responses.  
 
+This function will get :
+ * extensions - list of extensions which listening for event
+ * eventName - event name which is resolving
+ * value - init value from called event
+ 
+By default is used `syncListCompose` function which will call sync all event handlers, returns response which will be fulfilled with array of responses.  
+
+Available functions :
+
+ * syncListCompose - will call all event handlers synchronously and return list of responses
+ * asyncListCompose - will call all event handlers asynchronously and return promise which will resolve to array of responses
+ 
 ### Extension component
 
 #### new Extension([extensionData: Object]): extension

@@ -1,5 +1,7 @@
 import Manager from "./Manager";
 import Extension from "./Extension";
+import asyncList from "./compose/asyncList";
+import syncList from "./compose/syncList";
 
 describe("Manager", () => {
     it("should create manager instance", () => {
@@ -158,9 +160,31 @@ describe("Manager", () => {
                 manager.registerExtension("SOME_NAME", extension);
             });
 
-            it("should call event handler on event call", () => {
-                const event = manager.createEvent("SOME_EVENT");
-                return event("SOME_VALUE").then(response => {
+            describe("when compose function is default", () => {
+                it("should call event handler on event call", () => {
+                    const event = manager.createEvent("SOME_EVENT");
+                    const response = event("SOME_VALUE");
+                    expect(eventHandler.calledOnce).be.true();
+                    expect(response.length).to.be.equal(1);
+                    expect(response[0]).to.be.equal("SOME_VALUE");
+                });
+            });
+
+            describe("when compose function is async list", () => {
+                it("should call event handler on event call", () => {
+                    const event = manager.createEvent("SOME_EVENT", asyncList);
+                    return event("SOME_VALUE").then(response => {
+                        expect(eventHandler.calledOnce).to.be.true();
+                        expect(response.length).to.be.equal(1);
+                        expect(response[0]).to.be.equal("SOME_VALUE");
+                    });
+                });
+            });
+
+            describe("when compose function is sync list", () => {
+                it("should call event handler on event call", () => {
+                    const event = manager.createEvent("SOME_EVENT", syncList);
+                    const response = event("SOME_VALUE");
                     expect(eventHandler.calledOnce).be.true();
                     expect(response.length).to.be.equal(1);
                     expect(response[0]).to.be.equal("SOME_VALUE");
