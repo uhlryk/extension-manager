@@ -174,33 +174,32 @@ module.exports = require("babel-polyfill");
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+exports.asyncList = exports.syncList = exports.Extension = exports.Manager = undefined;
 
-var _Manager = __webpack_require__(5);
+var _Manager2 = __webpack_require__(5);
 
-var _Manager2 = _interopRequireDefault(_Manager);
+var _Manager3 = _interopRequireDefault(_Manager2);
 
-var _Extension = __webpack_require__(0);
+var _Extension2 = __webpack_require__(0);
 
-var _Extension2 = _interopRequireDefault(_Extension);
+var _Extension3 = _interopRequireDefault(_Extension2);
 
-var _syncList = __webpack_require__(1);
+var _syncList2 = __webpack_require__(1);
 
-var _syncList2 = _interopRequireDefault(_syncList);
+var _syncList3 = _interopRequireDefault(_syncList2);
 
-var _asyncList = __webpack_require__(7);
+var _asyncList2 = __webpack_require__(7);
 
-var _asyncList2 = _interopRequireDefault(_asyncList);
+var _asyncList3 = _interopRequireDefault(_asyncList2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-    Manager: _Manager2.default,
-    Extension: _Extension2.default,
-    syncListCompose: _syncList2.default,
-    asyncListCompose: _asyncList2.default
-};
+exports.Manager = _Manager3.default;
+exports.Extension = _Extension3.default;
+exports.syncList = _syncList3.default;
+exports.asyncList = _asyncList3.default;
 
 /***/ }),
 /* 5 */
