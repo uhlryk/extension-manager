@@ -1,4 +1,8 @@
 import Promise from "bluebird";
 
-export default (extensions, eventName, value) =>
-    Promise.all(extensions.map(extension => extension.getEventListener(eventName)(value)));
+export default (extensionJoints, eventName, value) =>
+    Promise.all(
+        extensionJoints.map(extensionJoint =>
+            extensionJoint.getExtension().getEventListener(eventName)(value)
+        )
+    );

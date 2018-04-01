@@ -1,80 +1,97 @@
 import Overload from "function-overloader";
 import Extension from "./Extension";
+import ExtensionJoint from "./ExtensionJoint";
 import syncListCompose from "./compose/syncList";
 
 export default class Manager {
     constructor() {
-        this._extensions = {};
+        this._extensionJoints = {};
     }
 
     registerExtension() {
         Overload.set(...arguments)
             .when(Overload.STRING, Overload.INSTANCE(Extension))
             .do((extensionName, extension) => {
-                this._extensions[extensionName] = { extension, enabled: true };
+                this._extensionJoints[extensionName] = new ExtensionJoint(extensionName, extension);
             })
             .when(Overload.STRING, Overload.OBJECT)
             .do((extensionName, { properties, events }) => {
-                this._extensions[extensionName] = {
-                    extension: new Extension({
+                this._extensionJoints[extensionName] = new ExtensionJoint(
+                    extensionName,
+                    new Extension({
                         properties,
                         events
-                    }),
-                    enabled: true
-                };
+                    })
+                );
             });
         return this;
     }
 
-    getExtensions(onlyActive = true) {
-        return Object.values(this._extensions)
-            .filter(extensionData => (onlyActive ? extensionData.enabled : true))
-            .map(extensionData => extensionData.extension);
+    getExtensionJoints(onlyActive = true) {
+        return Object.values(this._extensionJoints).filter(
+            extensionJoint => (onlyActive ? extensionJoint.isEnabled() : true)
+        );
     }
 
-    getExtensionsWithProperty(propertyName, onlyActive = true) {
-        return this.getExtensions(onlyActive).filter(extension => extension.hasProperty(propertyName));
+    getExtensionJointsWithProperty(propertyName, onlyActive = true) {
+        return this.getExtensionJoints(onlyActive).filter(extensionJoint =>
+            extensionJoint.getExtension().hasProperty(propertyName)
+        );
     }
 
-    getExtensionsWithEventListener(eventName, onlyActive = true) {
-        return this.getExtensions(onlyActive).filter(extension => extension.hasEventListener(eventName));
+    getExtensionJointsWithEventListener(eventName, onlyActive = true) {
+        return this.getExtensionJoints(onlyActive).filter(extensionJoint =>
+            extensionJoint.getExtension().hasEventListener(eventName)
+        );
     }
 
-    isExtensionActive(extensionName) {
-        if (this.hasExtension(extensionName)) {
-            return this._extensions[extensionName].enabled;
+    getPropertyValues(propertyName, onlyActive = true) {
+        return this.getExtensionJointsWithProperty(propertyName, onlyActive).reduce(
+            (response, extensionJoint) => {
+                response[extensionJoint.getName()] = extensionJoint
+                    .getExtension()
+                    .getProperty(propertyName);
+            },
+            {}
+        );
+    }
+
+    isExtensionJointEnabled(extensionName) {
+        if (this.hasExtensionJoint(extensionName)) {
+            return this._extensionJoints[extensionName].isEnabled();
         }
         return false;
     }
 
-    disableExtension(extensionName) {
-        if (this.hasExtension(extensionName)) {
-            this._extensions[extensionName].enabled = false;
+    disableExtensionJoint(extensionName) {
+        if (this.hasExtensionJoint(extensionName)) {
+            this._extensionJoints[extensionName].disable();
             return true;
         }
         return false;
     }
 
-    enableExtension(extensionName) {
-        if (this.hasExtension(extensionName)) {
-            this._extensions[extensionName].enabled = true;
+    enableExtensionJoint(extensionName) {
+        if (this.hasExtensionJoint(extensionName)) {
+            this._extensionJoints[extensionName].enable();
             return true;
         }
         return false;
     }
 
-    hasExtension(extensionName) {
-        return !!this._extensions[extensionName];
+    hasExtensionJoint(extensionName) {
+        return !!this._extensionJoints[extensionName];
     }
 
-    getExtension(extensionName) {
-        if (this.hasExtension(extensionName)) {
-            return this._extensions[extensionName].extension;
+    getExtensionJoint(extensionName) {
+        if (this.hasExtensionJoint(extensionName)) {
+            return this._extensionJoints[extensionName];
         }
         return null;
     }
 
     createEvent(eventName, composeFunction = syncListCompose) {
-        return value => composeFunction(this.getExtensionsWithEventListener(eventName), eventName, value);
+        return value =>
+            composeFunction(this.getExtensionJointsWithEventListener(eventName), eventName, value);
     }
 }

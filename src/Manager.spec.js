@@ -1,4 +1,5 @@
 import Manager from "./Manager";
+import ExtensionJoint from "./ExtensionJoint";
 import Extension from "./Extension";
 import asyncList from "./compose/asyncList";
 import syncList from "./compose/syncList";
@@ -16,24 +17,19 @@ describe("Manager", () => {
             manager = new Manager();
         });
 
-        it("should return empty extension list", () => {
-            expect(manager.getExtensions().length).to.be.equal(0);
+        it("should return empty extension joint list", () => {
+            expect(manager.getExtensionJoints().length).to.be.equal(0);
         });
 
         it("should add extension", () => {
             const extension = new Extension();
             manager.registerExtension("SOME_NAME", extension);
-            expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
-                extension: extension,
-                enabled: true
-            });
+            expect(manager._extensionJoints["SOME_NAME"]).to.be.an.instanceof(ExtensionJoint);
         });
 
         it("should add extension as an empty object", () => {
             manager.registerExtension("SOME_NAME", {});
-            expect(manager._extensions["SOME_NAME"]).to.have.property("extension");
-            expect(manager._extensions["SOME_NAME"]).to.have.property("enabled", true);
-            expect(manager._extensions["SOME_NAME"].extension).to.be.instanceOf(Extension);
+            expect(manager._extensionJoints["SOME_NAME"]).to.be.an.instanceof(ExtensionJoint);
         });
 
         it("should add extension as an object with properties", () => {
@@ -42,10 +38,10 @@ describe("Manager", () => {
                     someKey: "someValue"
                 }
             });
-            expect(manager._extensions["SOME_NAME"]).to.have.property("extension");
-            expect(manager._extensions["SOME_NAME"]).to.have.property("enabled", true);
-            expect(manager._extensions["SOME_NAME"].extension).to.be.instanceOf(Extension);
-            expect(manager._extensions["SOME_NAME"].extension._properties["someKey"]).to.be.equal("someValue");
+            expect(manager._extensionJoints["SOME_NAME"]).to.be.instanceof(ExtensionJoint);
+            expect(
+                manager._extensionJoints["SOME_NAME"]._extension._properties["someKey"]
+            ).to.be.equal("someValue");
         });
 
         it("should add extension as an object with events", () => {
@@ -55,10 +51,10 @@ describe("Manager", () => {
                     someKey: someHandler
                 }
             });
-            expect(manager._extensions["SOME_NAME"]).to.have.property("extension");
-            expect(manager._extensions["SOME_NAME"]).to.have.property("enabled", true);
-            expect(manager._extensions["SOME_NAME"].extension).to.be.instanceOf(Extension);
-            expect(manager._extensions["SOME_NAME"].extension._events["someKey"]).to.be.equal(someHandler);
+            expect(manager._extensionJoints["SOME_NAME"]).to.be.instanceof(ExtensionJoint);
+            expect(manager._extensionJoints["SOME_NAME"]._extension._events["someKey"]).to.be.equal(
+                someHandler
+            );
         });
 
         describe("when registered extension", () => {
@@ -69,57 +65,49 @@ describe("Manager", () => {
             });
 
             it("should return extension list", () => {
-                expect(manager.getExtensions().length).to.be.equal(1);
-                expect(manager.getExtensions()[0]).to.be.equal(extension);
+                expect(manager.getExtensionJoints().length).to.be.equal(1);
+                expect(manager.getExtensionJoints()[0].getExtension()).to.be.equal(extension);
             });
 
             it("should return extension by name", () => {
-                expect(manager.getExtension("SOME_NAME")).to.be.equal(extension);
-                expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
-                    extension: extension,
-                    enabled: true
-                });
+                expect(manager.getExtensionJoint("SOME_NAME").getExtension()).to.be.equal(
+                    extension
+                );
             });
 
             it("should return null if extension with name doesn't exist", () => {
-                expect(manager.getExtension("NON_EXISTING_NAME")).to.be.equal(null);
+                expect(manager.getExtensionJoint("NON_EXISTING_NAME")).to.be.equal(null);
             });
 
             it("should return true for enabled extension", () => {
-                expect(manager.isExtensionActive("SOME_NAME")).to.be.true();
+                expect(manager.isExtensionJointEnabled("SOME_NAME")).to.be.true();
             });
 
             it("should return true if extension is registered", () => {
-                expect(manager.hasExtension("SOME_NAME")).to.be.true();
+                expect(manager.hasExtensionJoint("SOME_NAME")).to.be.true();
             });
 
             it("should disable extension", () => {
-                expect(manager.disableExtension("SOME_NAME")).to.be.true();
-                expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
-                    extension: extension,
-                    enabled: false
-                });
+                expect(manager.disableExtensionJoint("SOME_NAME")).to.be.true();
+                expect(manager._extensionJoints["SOME_NAME"]._enabled).to.be.false();
             });
 
             it("should return false when disable non existing extension", () => {
-                expect(manager.disableExtension("NON_EXISTING_NAME")).to.be.false();
+                expect(manager.disableExtensionJoint("NON_EXISTING_NAME")).to.be.false();
             });
 
             describe("when extension is disabled", () => {
                 beforeEach(() => {
-                    manager.disableExtension("SOME_NAME");
+                    manager.disableExtensionJoint("SOME_NAME");
                 });
 
                 it("should return false when extension is disabled", () => {
-                    expect(manager.isExtensionActive("SOME_NAME")).to.be.false();
+                    expect(manager.isExtensionJointEnabled("SOME_NAME")).to.be.false();
                 });
 
                 it("should enable extension", () => {
-                    expect(manager.enableExtension("SOME_NAME")).to.be.true();
-                    expect(manager._extensions["SOME_NAME"]).to.shallowDeepEqual({
-                        extension: extension,
-                        enabled: true
-                    });
+                    expect(manager.enableExtensionJoint("SOME_NAME")).to.be.true();
+                    expect(manager._extensionJoints["SOME_NAME"]._enabled).to.be.true();
                 });
             });
         });
@@ -142,11 +130,10 @@ describe("Manager", () => {
             });
 
             it("Should return extensions with specific property", () => {
-                const extensions = manager.getExtensionsWithProperty("PROPERTY_1");
-                expect(extensions.length).to.be.equal(2);
-                expect(extensions).to.include(extensionA);
-                expect(extensions).to.include(extensionB);
-                expect(extensions).to.not.include(extensionC);
+                const extensionJoints = manager.getExtensionJointsWithProperty("PROPERTY_1");
+                expect(extensionJoints.length).to.be.equal(2);
+                expect(extensionJoints[0]._extension).to.include(extensionA);
+                expect(extensionJoints[1]._extension).to.include(extensionB);
             });
         });
 
@@ -210,11 +197,10 @@ describe("Manager", () => {
             });
 
             it("Should return extensions with specific event listener", () => {
-                const extensions = manager.getExtensionsWithEventListener("EVENT_1");
-                expect(extensions.length).to.be.equal(2);
-                expect(extensions).to.include(extensionA);
-                expect(extensions).to.include(extensionB);
-                expect(extensions).to.not.include(extensionC);
+                const extensionJoints = manager.getExtensionJointsWithEventListener("EVENT_1");
+                expect(extensionJoints.length).to.be.equal(2);
+                expect(extensionJoints[0]._extension).to.be.equal(extensionA);
+                expect(extensionJoints[1]._extension).to.be.equal(extensionB);
             });
         });
     });

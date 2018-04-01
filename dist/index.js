@@ -146,9 +146,9 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-exports.default = function (extensions, eventName, value) {
-    return extensions.map(function (extension) {
-        return extension.getEventListener(eventName)(value);
+exports.default = function (extensionJoints, eventName, value) {
+    return extensionJoints.map(function (extensionJoint) {
+        return extensionJoint.getExtension().getEventListener(eventName)(value);
     });
 };
 
@@ -190,7 +190,7 @@ var _syncList2 = __webpack_require__(1);
 
 var _syncList3 = _interopRequireDefault(_syncList2);
 
-var _asyncList2 = __webpack_require__(7);
+var _asyncList2 = __webpack_require__(8);
 
 var _asyncList3 = _interopRequireDefault(_asyncList2);
 
@@ -222,6 +222,10 @@ var _Extension = __webpack_require__(0);
 
 var _Extension2 = _interopRequireDefault(_Extension);
 
+var _ExtensionJoint = __webpack_require__(7);
+
+var _ExtensionJoint2 = _interopRequireDefault(_ExtensionJoint);
+
 var _syncList = __webpack_require__(1);
 
 var _syncList2 = _interopRequireDefault(_syncList);
@@ -234,7 +238,7 @@ var Manager = function () {
     function Manager() {
         _classCallCheck(this, Manager);
 
-        this._extensions = {};
+        this._extensionJoints = {};
     }
 
     _createClass(Manager, [{
@@ -243,86 +247,90 @@ var Manager = function () {
             var _this = this;
 
             _functionOverloader2.default.set.apply(_functionOverloader2.default, arguments).when(_functionOverloader2.default.STRING, _functionOverloader2.default.INSTANCE(_Extension2.default)).do(function (extensionName, extension) {
-                _this._extensions[extensionName] = { extension: extension, enabled: true };
+                _this._extensionJoints[extensionName] = new _ExtensionJoint2.default(extensionName, extension);
             }).when(_functionOverloader2.default.STRING, _functionOverloader2.default.OBJECT).do(function (extensionName, _ref) {
                 var properties = _ref.properties,
                     events = _ref.events;
 
-                _this._extensions[extensionName] = {
-                    extension: new _Extension2.default({
-                        properties: properties,
-                        events: events
-                    }),
-                    enabled: true
-                };
+                _this._extensionJoints[extensionName] = new _ExtensionJoint2.default(extensionName, new _Extension2.default({
+                    properties: properties,
+                    events: events
+                }));
             });
             return this;
         }
     }, {
-        key: "getExtensions",
-        value: function getExtensions() {
+        key: "getExtensionJoints",
+        value: function getExtensionJoints() {
             var onlyActive = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
-            return Object.values(this._extensions).filter(function (extensionData) {
-                return onlyActive ? extensionData.enabled : true;
-            }).map(function (extensionData) {
-                return extensionData.extension;
+            return Object.values(this._extensionJoints).filter(function (extensionJoint) {
+                return onlyActive ? extensionJoint.isEnabled() : true;
             });
         }
     }, {
-        key: "getExtensionsWithProperty",
-        value: function getExtensionsWithProperty(propertyName) {
+        key: "getExtensionJointsWithProperty",
+        value: function getExtensionJointsWithProperty(propertyName) {
             var onlyActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-            return this.getExtensions(onlyActive).filter(function (extension) {
-                return extension.hasProperty(propertyName);
+            return this.getExtensionJoints(onlyActive).filter(function (extensionJoint) {
+                return extensionJoint.getExtension().hasProperty(propertyName);
             });
         }
     }, {
-        key: "getExtensionsWithEventListener",
-        value: function getExtensionsWithEventListener(eventName) {
+        key: "getExtensionJointsWithEventListener",
+        value: function getExtensionJointsWithEventListener(eventName) {
             var onlyActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-            return this.getExtensions(onlyActive).filter(function (extension) {
-                return extension.hasEventListener(eventName);
+            return this.getExtensionJoints(onlyActive).filter(function (extensionJoint) {
+                return extensionJoint.getExtension().hasEventListener(eventName);
             });
         }
     }, {
-        key: "isExtensionActive",
-        value: function isExtensionActive(extensionName) {
-            if (this.hasExtension(extensionName)) {
-                return this._extensions[extensionName].enabled;
+        key: "getPropertyValues",
+        value: function getPropertyValues(propertyName) {
+            var onlyActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+            return this.getExtensionJointsWithProperty(propertyName, onlyActive).reduce(function (response, extensionJoint) {
+                response[extensionJoint.getName()] = extensionJoint.getExtension().getProperty(propertyName);
+            }, {});
+        }
+    }, {
+        key: "isExtensionJointEnabled",
+        value: function isExtensionJointEnabled(extensionName) {
+            if (this.hasExtensionJoint(extensionName)) {
+                return this._extensionJoints[extensionName].isEnabled();
             }
             return false;
         }
     }, {
-        key: "disableExtension",
-        value: function disableExtension(extensionName) {
-            if (this.hasExtension(extensionName)) {
-                this._extensions[extensionName].enabled = false;
+        key: "disableExtensionJoint",
+        value: function disableExtensionJoint(extensionName) {
+            if (this.hasExtensionJoint(extensionName)) {
+                this._extensionJoints[extensionName].disable();
                 return true;
             }
             return false;
         }
     }, {
-        key: "enableExtension",
-        value: function enableExtension(extensionName) {
-            if (this.hasExtension(extensionName)) {
-                this._extensions[extensionName].enabled = true;
+        key: "enableExtensionJoint",
+        value: function enableExtensionJoint(extensionName) {
+            if (this.hasExtensionJoint(extensionName)) {
+                this._extensionJoints[extensionName].enable();
                 return true;
             }
             return false;
         }
     }, {
-        key: "hasExtension",
-        value: function hasExtension(extensionName) {
-            return !!this._extensions[extensionName];
+        key: "hasExtensionJoint",
+        value: function hasExtensionJoint(extensionName) {
+            return !!this._extensionJoints[extensionName];
         }
     }, {
-        key: "getExtension",
-        value: function getExtension(extensionName) {
-            if (this.hasExtension(extensionName)) {
-                return this._extensions[extensionName].extension;
+        key: "getExtensionJoint",
+        value: function getExtensionJoint(extensionName) {
+            if (this.hasExtensionJoint(extensionName)) {
+                return this._extensionJoints[extensionName];
             }
             return null;
         }
@@ -334,7 +342,7 @@ var Manager = function () {
             var composeFunction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _syncList2.default;
 
             return function (value) {
-                return composeFunction(_this2.getExtensionsWithEventListener(eventName), eventName, value);
+                return composeFunction(_this2.getExtensionJointsWithEventListener(eventName), eventName, value);
             };
         }
     }]);
@@ -361,20 +369,82 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _bluebird = __webpack_require__(8);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ExtensionJoint = function () {
+    function ExtensionJoint(name, extension, manager) {
+        _classCallCheck(this, ExtensionJoint);
+
+        this._name = name;
+        this._extension = extension;
+        this._enabled = true;
+        this._manager = manager;
+    }
+
+    _createClass(ExtensionJoint, [{
+        key: "isEnabled",
+        value: function isEnabled() {
+            return this._enabled;
+        }
+    }, {
+        key: "enable",
+        value: function enable() {
+            this._enabled = true;
+        }
+    }, {
+        key: "disable",
+        value: function disable() {
+            this._enabled = false;
+        }
+    }, {
+        key: "getExtension",
+        value: function getExtension() {
+            return this._extension;
+        }
+    }, {
+        key: "getName",
+        value: function getName() {
+            return this._name;
+        }
+    }, {
+        key: "getManager",
+        value: function getManager() {
+            return this._manager;
+        }
+    }]);
+
+    return ExtensionJoint;
+}();
+
+exports.default = ExtensionJoint;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _bluebird = __webpack_require__(9);
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (extensions, eventName, value) {
-    return _bluebird2.default.all(extensions.map(function (extension) {
-        return extension.getEventListener(eventName)(value);
+exports.default = function (extensionJoints, eventName, value) {
+    return _bluebird2.default.all(extensionJoints.map(function (extensionJoint) {
+        return extensionJoint.getExtension().getEventListener(eventName)(value);
     }));
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
