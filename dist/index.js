@@ -247,7 +247,7 @@ var Manager = function () {
             var _this = this;
 
             _functionOverloader2.default.set.apply(_functionOverloader2.default, arguments).when(_functionOverloader2.default.STRING, _functionOverloader2.default.INSTANCE(_Extension2.default)).do(function (extensionName, extension) {
-                _this._extensionJoints[extensionName] = new _ExtensionJoint2.default(extensionName, extension);
+                _this._extensionJoints[extensionName] = new _ExtensionJoint2.default(extensionName, extension, _this);
             }).when(_functionOverloader2.default.STRING, _functionOverloader2.default.OBJECT).do(function (extensionName, _ref) {
                 var properties = _ref.properties,
                     events = _ref.events;
@@ -255,7 +255,7 @@ var Manager = function () {
                 _this._extensionJoints[extensionName] = new _ExtensionJoint2.default(extensionName, new _Extension2.default({
                     properties: properties,
                     events: events
-                }));
+                }), _this);
             });
             return this;
         }

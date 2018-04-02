@@ -154,35 +154,38 @@ OR
 Allow to register/add any new extension and return same manager instance.
 Second argument is simple object with properties: `properties` and `events`
 
-#### manager.getExtensions([onlyActive = true]): Array<extension>
-When `onlyActive` flag is true it will return all **active** extensions previously registered
+#### manager.getExtensionJoints([onlyActive = true]): Array<ExtensionJoint>
+When `onlyActive` flag is true it will return all **active** extensions joints for previously registered extensions
 When flag is false then it will return all extensions.
 
-#### manager.getExtensionsWithProperty(propertyName: String [, onlyActive = true]): Array<extensions>
-When `onlyActive` flag is true it will return array of active extensions with specific property
+#### manager.getExtensionJointsWithProperty(propertyName: String [, onlyActive = true]): Array<ExtensionJoint>
+When `onlyActive` flag is true it will return array of active extension joints with specific property
 When flag is false then it will return all extensions with specific property
 
-#### manager.getExtensionsWithEventListener(eventName: String) [, onlyActive = true]: Array<extensions>
-When `onlyActive` flag is true it will return array of active extensions with specific event listener
+#### manager.getExtensionJointsWithEventListener(eventName: String) [, onlyActive = true]): Array<ExtensionJoints>
+When `onlyActive` flag is true it will return array of active extension joints with specific event listener
 When flag is false then it will return all extensions with specific event listener
 
-#### manager.isExtensionActive(extensionInstanceName: String): Boolean
+#### manager.isExtensionJointEnabled(extensionInstanceName: String): Boolean
 Return true if extension with ext ensionInstanceName exist and is active. Otherwise false
 
-#### manager.hasExtension(extensionInstanceName: String): Boolean
+#### manager.hasExtensionJoint(extensionInstanceName: String): Boolean
 
 Returns true if extension with extensionInstanceName exists.
 
-#### manager.disableExtension(extensionInstanceName: String): Boolean
+#### manager.disableExtensionJoint(extensionInstanceName: String): Boolean
 
 Disable extension with undefinedextensionInstanceName name then it will return true. If extension doesn't exist it will return false
 
-#### manager.enableExtension(extensionInstanceName: String): Boolean
+#### manager.enableExtensionJoint(extensionInstanceName: String): Boolean
 
 Enable extension with extensionInstanceName name then it will return true. If extension doesn't exist it will return false
 
-#### manager.getExtension(extensionInstanceName: String): extension
-Return extension by its name or null if doesn't exist.
+#### manager.getExtensionJoint(extensionInstanceName: String): ExtensionJoint
+Return extension joint by its name or null if doesn't exist.
+
+#### manager.getPropertyValues(propertyName: String [, onlyActive = true]): Object
+Return object where keys are extension joints names, and values are extensions properties values
 
 #### manager.createEvent(eventName: String [, composeFunction: Function]): Function
 Create event function. Next step is to call this function to trigger event.
@@ -214,7 +217,30 @@ Available functions :
 
  * syncListCompose - will call all event handlers synchronously and return list of responses
  * asyncListCompose - will call all event handlers asynchronously and return promise which will resolve to array of responses
- 
+
+### ExtensionJoint component
+This is object containing reference to Manager and to Extension, It also have name.
+It is created only in manager when extension is registered
+
+#### extensionJoint.isEnabled(): Boolean
+
+Return true when extension is enabled
+
+#### extensionJoint.enable(): void
+Enable extension
+
+#### extensionJoint.disable(): void
+Disable extension
+
+#### extensionJoint.getExtension(): Extension
+Returns extension
+
+#### extensionJoint.getName(): String
+Returns extension name
+
+#### extensionJoint.getManager(): Manager
+Returns manager
+
 ### Extension component
 
 #### new Extension([extensionData: Object]): extension

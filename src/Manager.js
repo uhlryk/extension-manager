@@ -12,7 +12,11 @@ export default class Manager {
         Overload.set(...arguments)
             .when(Overload.STRING, Overload.INSTANCE(Extension))
             .do((extensionName, extension) => {
-                this._extensionJoints[extensionName] = new ExtensionJoint(extensionName, extension);
+                this._extensionJoints[extensionName] = new ExtensionJoint(
+                    extensionName,
+                    extension,
+                    this
+                );
             })
             .when(Overload.STRING, Overload.OBJECT)
             .do((extensionName, { properties, events }) => {
@@ -21,7 +25,8 @@ export default class Manager {
                     new Extension({
                         properties,
                         events
-                    })
+                    }),
+                    this
                 );
             });
         return this;
