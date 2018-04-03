@@ -136,6 +136,13 @@ describe("Manager", () => {
                 expect(extensionJoints[0]._extension).to.include(extensionA);
                 expect(extensionJoints[1]._extension).to.include(extensionB);
             });
+
+            it("should return properties value as object where keys are extensions name and value is property value", () => {
+                expect(manager.getPropertyValues("PROPERTY_1")).to.be.shallowDeepEqual({
+                    SOME_NAME_A: "VALUE_1",
+                    SOME_NAME_B: "VALUE_2"
+                });
+            });
         });
 
         describe("when registered extension has events listeners", () => {

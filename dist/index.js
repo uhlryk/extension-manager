@@ -248,6 +248,8 @@ var _syncList2 = _interopRequireDefault(_syncList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Manager = function () {
@@ -308,7 +310,7 @@ var Manager = function () {
             var onlyActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
             return this.getExtensionJointsWithProperty(propertyName, onlyActive).reduce(function (response, extensionJoint) {
-                response[extensionJoint.getName()] = extensionJoint.getExtension().getProperty(propertyName);
+                return Object.assign(_defineProperty({}, extensionJoint.getName(), extensionJoint.getExtension().getProperty(propertyName)), response);
             }, {});
         }
     }, {

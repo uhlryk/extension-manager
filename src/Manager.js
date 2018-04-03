@@ -52,11 +52,15 @@ export default class Manager {
 
     getPropertyValues(propertyName, onlyActive = true) {
         return this.getExtensionJointsWithProperty(propertyName, onlyActive).reduce(
-            (response, extensionJoint) => {
-                response[extensionJoint.getName()] = extensionJoint
-                    .getExtension()
-                    .getProperty(propertyName);
-            },
+            (response, extensionJoint) =>
+                Object.assign(
+                    {
+                        [extensionJoint.getName()]: extensionJoint
+                            .getExtension()
+                            .getProperty(propertyName)
+                    },
+                    response
+                ),
             {}
         );
     }
