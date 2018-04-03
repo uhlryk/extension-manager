@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -154,20 +154,26 @@ exports.default = function (extensionJoints, eventName, value) {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-__webpack_require__(3);
-module.exports = __webpack_require__(4);
-
+module.exports = require("bluebird");
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(4);
+module.exports = __webpack_require__(5);
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-polyfill");
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -176,9 +182,9 @@ module.exports = require("babel-polyfill");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.asyncList = exports.syncList = exports.Extension = exports.Manager = undefined;
+exports.asyncMapCompose = exports.asyncListCompose = exports.syncMapCompose = exports.syncListCompose = exports.Extension = exports.Manager = undefined;
 
-var _Manager2 = __webpack_require__(5);
+var _Manager2 = __webpack_require__(6);
 
 var _Manager3 = _interopRequireDefault(_Manager2);
 
@@ -186,23 +192,33 @@ var _Extension2 = __webpack_require__(0);
 
 var _Extension3 = _interopRequireDefault(_Extension2);
 
-var _syncList2 = __webpack_require__(1);
+var _syncList = __webpack_require__(1);
 
-var _syncList3 = _interopRequireDefault(_syncList2);
+var _syncList2 = _interopRequireDefault(_syncList);
 
-var _asyncList2 = __webpack_require__(8);
+var _syncMap = __webpack_require__(9);
 
-var _asyncList3 = _interopRequireDefault(_asyncList2);
+var _syncMap2 = _interopRequireDefault(_syncMap);
+
+var _asyncList = __webpack_require__(10);
+
+var _asyncList2 = _interopRequireDefault(_asyncList);
+
+var _asyncMap = __webpack_require__(11);
+
+var _asyncMap2 = _interopRequireDefault(_asyncMap);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.Manager = _Manager3.default;
 exports.Extension = _Extension3.default;
-exports.syncList = _syncList3.default;
-exports.asyncList = _asyncList3.default;
+exports.syncListCompose = _syncList2.default;
+exports.syncMapCompose = _syncMap2.default;
+exports.asyncListCompose = _asyncList2.default;
+exports.asyncMapCompose = _asyncMap2.default;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -214,7 +230,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _functionOverloader = __webpack_require__(6);
+var _functionOverloader = __webpack_require__(7);
 
 var _functionOverloader2 = _interopRequireDefault(_functionOverloader);
 
@@ -222,7 +238,7 @@ var _Extension = __webpack_require__(0);
 
 var _Extension2 = _interopRequireDefault(_Extension);
 
-var _ExtensionJoint = __webpack_require__(7);
+var _ExtensionJoint = __webpack_require__(8);
 
 var _ExtensionJoint2 = _interopRequireDefault(_ExtensionJoint);
 
@@ -353,13 +369,13 @@ var Manager = function () {
 exports.default = Manager;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("function-overloader");
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -421,7 +437,7 @@ var ExtensionJoint = function () {
 exports.default = ExtensionJoint;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -431,7 +447,26 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _bluebird = __webpack_require__(9);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+exports.default = function (extensionJoints, eventName, value) {
+    return extensionJoints.reduce(function (response, extensionJoint) {
+        return Object.assign(_defineProperty({}, extensionJoint.getName(), extensionJoint.getExtension().getEventListener(eventName)(value)), response);
+    }, {});
+};
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _bluebird = __webpack_require__(2);
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
 
@@ -444,10 +479,29 @@ exports.default = function (extensionJoints, eventName, value) {
 };
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports) {
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("bluebird");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _bluebird = __webpack_require__(2);
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+exports.default = function (extensionJoints, eventName, value) {
+    return _bluebird2.default.props(extensionJoints.reduce(function (response, extensionJoint) {
+        return Object.assign(_defineProperty({}, extensionJoint.getName(), extensionJoint.getExtension().getEventListener(eventName)(value)), response);
+    }, {}));
+};
 
 /***/ })
 /******/ ]);

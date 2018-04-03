@@ -1,9 +1,10 @@
 import Manager from "./Manager";
 import ExtensionJoint from "./ExtensionJoint";
 import Extension from "./Extension";
-import asyncList from "./compose/asyncList";
-import syncList from "./compose/syncList";
-
+import asyncListCompose from "./compose/asyncList";
+import asyncMapCompose from "./compose/asyncMap";
+import syncListCompose from "./compose/syncList";
+import syncMapCompose from "./compose/syncMap";
 describe("Manager", () => {
     it("should create manager instance", () => {
         const manager = new Manager();
@@ -159,7 +160,7 @@ describe("Manager", () => {
 
             describe("when compose function is async list", () => {
                 it("should call event handler on event call", () => {
-                    const event = manager.createEvent("SOME_EVENT", asyncList);
+                    const event = manager.createEvent("SOME_EVENT", asyncListCompose);
                     return event("SOME_VALUE").then(response => {
                         expect(eventHandler.calledOnce).to.be.true();
                         expect(response.length).to.be.equal(1);
@@ -168,13 +169,36 @@ describe("Manager", () => {
                 });
             });
 
+            describe("when compose function is async map", () => {
+                it("should call event handler on event call", () => {
+                    const event = manager.createEvent("SOME_EVENT", asyncMapCompose);
+                    return event("SOME_VALUE").then(response => {
+                        expect(eventHandler.calledOnce).to.be.true();
+                        expect(response).to.be.shallowDeepEqual({
+                            SOME_NAME: "SOME_VALUE"
+                        });
+                    });
+                });
+            });
+
             describe("when compose function is sync list", () => {
                 it("should call event handler on event call", () => {
-                    const event = manager.createEvent("SOME_EVENT", syncList);
+                    const event = manager.createEvent("SOME_EVENT", syncListCompose);
                     const response = event("SOME_VALUE");
                     expect(eventHandler.calledOnce).be.true();
                     expect(response.length).to.be.equal(1);
                     expect(response[0]).to.be.equal("SOME_VALUE");
+                });
+            });
+
+            describe("when compose function is sync map", () => {
+                it("should call event handler on event call", () => {
+                    const event = manager.createEvent("SOME_EVENT", syncMapCompose);
+                    const response = event("SOME_VALUE");
+                    expect(eventHandler.calledOnce).be.true();
+                    expect(response).to.be.shallowDeepEqual({
+                        SOME_NAME: "SOME_VALUE"
+                    });
                 });
             });
         });

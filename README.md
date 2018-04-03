@@ -216,7 +216,9 @@ By default is used `syncListCompose` function which will call sync all event han
 Available functions :
 
  * syncListCompose - will call all event handlers synchronously and return list of responses
+ * syncMapCompose - will call all event handlers synchronously and return object where keys are extensions names and values are responses
  * asyncListCompose - will call all event handlers asynchronously and return promise which will resolve to array of responses
+ * asyncMapCompose - will call all event handlers asynchronously and return promise which will resolve to object where keys are extensions names and values are responses
 
 ### ExtensionJoint component
 This is object containing reference to Manager and to Extension, It also have name.
