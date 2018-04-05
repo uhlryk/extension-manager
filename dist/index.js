@@ -162,18 +162,11 @@ module.exports = require("bluebird");
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(4);
-module.exports = __webpack_require__(5);
+module.exports = __webpack_require__(4);
 
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-polyfill");
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -184,7 +177,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.asyncMapCompose = exports.asyncListCompose = exports.syncMapCompose = exports.syncListCompose = exports.Extension = exports.Manager = undefined;
 
-var _Manager2 = __webpack_require__(6);
+var _Manager2 = __webpack_require__(5);
 
 var _Manager3 = _interopRequireDefault(_Manager2);
 
@@ -196,15 +189,15 @@ var _syncList = __webpack_require__(1);
 
 var _syncList2 = _interopRequireDefault(_syncList);
 
-var _syncMap = __webpack_require__(9);
+var _syncMap = __webpack_require__(8);
 
 var _syncMap2 = _interopRequireDefault(_syncMap);
 
-var _asyncList = __webpack_require__(10);
+var _asyncList = __webpack_require__(9);
 
 var _asyncList2 = _interopRequireDefault(_asyncList);
 
-var _asyncMap = __webpack_require__(11);
+var _asyncMap = __webpack_require__(10);
 
 var _asyncMap2 = _interopRequireDefault(_asyncMap);
 
@@ -218,7 +211,7 @@ exports.asyncListCompose = _asyncList2.default;
 exports.asyncMapCompose = _asyncMap2.default;
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -230,7 +223,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _functionOverloader = __webpack_require__(7);
+var _functionOverloader = __webpack_require__(6);
 
 var _functionOverloader2 = _interopRequireDefault(_functionOverloader);
 
@@ -238,7 +231,7 @@ var _Extension = __webpack_require__(0);
 
 var _Extension2 = _interopRequireDefault(_Extension);
 
-var _ExtensionJoint = __webpack_require__(8);
+var _ExtensionJoint = __webpack_require__(7);
 
 var _ExtensionJoint2 = _interopRequireDefault(_ExtensionJoint);
 
@@ -371,13 +364,13 @@ var Manager = function () {
 exports.default = Manager;
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = require("function-overloader");
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -439,7 +432,7 @@ var ExtensionJoint = function () {
 exports.default = ExtensionJoint;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -458,7 +451,7 @@ exports.default = function (extensionJoints, eventName, value) {
 };
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -481,7 +474,7 @@ exports.default = function (extensionJoints, eventName, value) {
 };
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

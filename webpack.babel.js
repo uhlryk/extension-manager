@@ -2,7 +2,7 @@ import path from "path";
 import ExternalsPlugin from "webpack2-externals-plugin";
 
 export default {
-    entry: ["babel-polyfill", "./src/index.js"],
+    entry: ["./src/index.js"],
     output: {
         libraryTarget: "umd",
         filename: "index.js",
