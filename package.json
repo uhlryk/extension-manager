@@ -1,6 +1,6 @@
 {
   "name": "extensioner",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "description": "Extensioner is responsible for managing apps modules. Scalable apps become easy",
   "main": "dist/index.js",
   "scripts": {
